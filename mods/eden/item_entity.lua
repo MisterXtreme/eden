@@ -78,7 +78,7 @@ local item = {
 		if not lentity.age then
 			lentity.age = 0
 		else
-			if lentity.age > 1 then
+			if lentity.age > 2 then
 				for _, player in ipairs(minetest.get_objects_inside_radius(object:getpos(), 1)) do
 					if player:is_player() then
 						local inv = player:get_inventory()
