@@ -1,4 +1,4 @@
--- mods/default/item_entity.lua
+-- eden/item_entity.lua
 
 local builtin_item = minetest.registered_entities["__builtin:item"]
 
@@ -75,20 +75,28 @@ local item = {
 		end
 
 		-- Pickup
-		for _, player in ipairs(minetest.get_objects_inside_radius(object:getpos(), 1)) do
-			if player:is_player() then
-				local inv = player:get_inventory()
+		if not lentity.age then
+			lentity.age = 0
+		else
+			if lentity.age > 1 then
+				for _, player in ipairs(minetest.get_objects_inside_radius(object:getpos(), 1)) do
+					if player:is_player() then
+						local inv = player:get_inventory()
 
-				if inv and inv:room_for_item("main", ItemStack(itemstring)) then
-					inv:add_item("main", ItemStack(itemstring))
-					if itemstring ~= "" then
-						minetest.sound_play("eden_item_pickup", {
-							to_player = player:get_player_name(),
-							gain = 0.4,
-						})
+						if inv and inv:room_for_item("main", ItemStack(itemstring)) then
+							inv:add_item("main", ItemStack(itemstring))
+							if itemstring ~= "" then
+								minetest.sound_play("eden_item_pickup", {
+									to_player = player:get_player_name(),
+									gain = 0.4,
+								})
+							end
+							object:remove()
+						end
 					end
-					object:remove()
 				end
+			else
+				lentity.age = lentity.age + dtime
 			end
 		end
 	end,
