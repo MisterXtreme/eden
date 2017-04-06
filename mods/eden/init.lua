@@ -39,3 +39,10 @@ minetest.register_item(":", {
 		damage_groups = {fleshy=1},
 	}
 })
+
+-- Load nodes
+dofile(modpath.."/nodes.lua")
+-- Load liquids
+dofile(modpath.."/liquids.lua")
+-- Load mapgen
+dofile(modpath.."/mapgen.lua")
