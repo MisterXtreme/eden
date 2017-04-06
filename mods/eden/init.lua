@@ -40,6 +40,8 @@ minetest.register_item(":", {
 	}
 })
 
+-- Load item entity
+dofile(modpath.."/item_entity.lua")
 -- Load nodes
 dofile(modpath.."/nodes.lua")
 -- Load liquids
