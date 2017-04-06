@@ -13,3 +13,11 @@ function eden.get_version()
     core_type = "dev",
   }
 end
+
+-- [register] On join send message
+minetest.register_on_joinplayer(function(player)
+  minetest.after(0, function()
+    minetest.chat_send_player(player:get_player_name(), "This is Eden, a highly"
+      .." work-in-progress Minetest subgame.")
+  end)
+end)
