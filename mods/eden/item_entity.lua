@@ -102,6 +102,29 @@ local item = {
 	end,
 }
 
+function minetest.handle_node_drops(pos, drops, digger)
+	if not digger or not digger:is_player() then
+		return
+	end
+
+	local inv = digger:get_inventory()
+
+	for _,item in ipairs(drops) do
+		local count, name
+		if type(item) == "string" then
+			count = 1
+			name = item
+		else
+			count = item:get_count()
+			name = item:get_name()
+		end
+
+		for i=1,count do
+			minetest.add_item(pos, name)
+		end
+	end
+end
+
 -- set defined item as new __builtin:item, with the old one as fallback table
 setmetatable(item, builtin_item)
 minetest.register_entity(":__builtin:item", item)
