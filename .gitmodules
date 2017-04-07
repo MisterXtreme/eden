@@ -1,0 +1,3 @@
+[submodule "mods/hudlib"]
+	path = mods/hudlib
+	url = https://github.com/octacian/hudlib
