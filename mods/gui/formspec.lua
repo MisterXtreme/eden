@@ -104,3 +104,55 @@ function gui.set_current_tab(player, formname)
     player:set_attribute("inv_form", "gui:"..f.name)
   end
 end
+
+-- [function] Get itemslot background
+function gui.get_itemslot_bg(x, y, w, h)
+   local out = ""
+   for i = 0, w - 1, 1 do
+      for j = 0, h - 1, 1 do
+	       out = out .."image["..x+i..","..y+j..";1,1;gui_itemslot.png]"
+      end
+   end
+   return out
+end
+
+-- [function] Get hotbar itemslot background
+function gui.get_hotbar_itemslot_bg(x, y, w, h)
+   local out = ""
+   for i = 0, w - 1, 1 do
+      for j = 0, h - 1, 1 do
+	       out = out .."image["..x+i..","..y+j..";1,1;gui_itemslot.png^gui_itemslot_dark.png]"
+      end
+   end
+   return out
+end
+
+-- [function] Make inventory
+function gui.make_inv(x, y, w, h, location, name, hotbar)
+  if hotbar then
+    hotbar = gui.get_hotbar_itemslot_bg(x, y, w, h)
+  else
+    hotbar = ""
+  end
+
+  return "list["..location..";"..name..";"..x..","..y..";"..w..","..h..";]"
+    ..hotbar..gui.get_itemslot_bg(x, y, w, h)
+end
+
+-- [function] Make button
+function gui.make_button(x, y, w, h, name, label, noclip, exit)
+  local nc = tostring(noclip) or "false"
+
+  local type = "image_button"
+  if exit == true then
+    type = "image_button_exit"
+  end
+
+  if w == 2 then
+    return type.."["..x..","..y..";"..w..","..h..";gui_button_2w_inactive.png;"
+      ..name..";"..label..";"..nc..";false;gui_button_2w_active.png]"
+  else
+    return type.."["..x..","..y..";"..w..","..h..";gui_button_3w_inactive.png;"
+      ..name..";"..label..";"..nc..";false;gui_button_3w_active.png]"
+  end
+end
