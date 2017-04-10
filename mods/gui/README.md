@@ -14,6 +14,8 @@ kaadmy (CC BY-SA 4.0):
   gui_hotbar_bg.png
   gui_hotbar_selected.png
   heart.png
+  bubble.png
 
 octacian (CC BY-SA 3.0):
   heart_bg.png
+  bubble_bg.png
