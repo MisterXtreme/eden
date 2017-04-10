@@ -15,3 +15,6 @@ end)
 if minetest.get_modpath("hudlib") then
   dofile(modpath.."/hud.lua")
 end
+
+-- Load formspecs
+dofile(modpath.."/formspec.lua")
