@@ -24,8 +24,10 @@ kaadmy (CC BY-SA 4.0):
   gui_button_2w_active.png
   gui_button_3w_inactive.png
   gui_button_3w_active.png
+  gui_arrow_bg.png
 
 octacian (CC BY-SA 3.0):
   heart_bg.png
   bubble_bg.png
   gui_formspec_title.png
+  gui_icon_inventory.png

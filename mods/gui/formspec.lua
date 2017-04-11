@@ -11,7 +11,7 @@ local forms = {}
 
 -- [local function] Preprocess
 local function pre(name, form)
-  form = "size[8.5,9]"..form..gui.colors..gui.bg.."background[0,0;8.5,9;gui_formspec_bg.png]"
+  form = "size[9.5,9]"..form..gui.colors..gui.bg.."background[0,0;9.5,9;gui_formspec_bg.png]"
 
   local x, y = -0.9, 0.5
   -- Generate tabs
@@ -129,8 +129,8 @@ end
 
 -- [function] Make inventory
 function gui.make_inv(x, y, w, h, location, name, hotbar)
-  if hotbar then
-    hotbar = gui.get_hotbar_itemslot_bg(x, y, w, h)
+  if hotbar ~= false then
+    hotbar = gui.get_hotbar_itemslot_bg(x, y, w, 1)
   else
     hotbar = ""
   end
@@ -156,3 +156,21 @@ function gui.make_button(x, y, w, h, name, label, noclip, exit)
       ..name..";"..label..";"..nc..";false;gui_button_3w_active.png]"
   end
 end
+
+---
+--- Registrations
+---
+
+-- [register] Inventory tab
+gui.register_tab("inventory", {
+  icon = "gui_icon_inventory.png",
+  tooltip = "Inventory",
+  default = true,
+  get = function(name)
+    return
+      gui.make_inv(2.3, 1, 3, 3, "current_player", "craft", false) ..
+      "image[5.25,2;1,1;gui_arrow_bg.png^[transformR270]" ..
+      gui.make_inv(6.25, 2, 1, 1, "current_player", "craftpreview", false) ..
+      gui.make_inv(0.25, 4.7, 9, 4, "current_player", "main")
+  end,
+})
