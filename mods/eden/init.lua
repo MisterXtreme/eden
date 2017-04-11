@@ -48,3 +48,5 @@ dofile(modpath.."/nodes.lua")
 dofile(modpath.."/liquids.lua")
 -- Load mapgen
 dofile(modpath.."/mapgen.lua")
+-- Load chatcommands
+dofile(modpath.."/chatcommands.lua")
