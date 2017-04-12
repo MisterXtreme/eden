@@ -171,14 +171,16 @@ function gui.get_hotbar_itemslot_bg(x, y, w, h)
 end
 
 -- [function] Make inventory
-function gui.make_inv(x, y, w, h, location, name, hotbar)
+function gui.make_inv(x, y, w, h, location, name, hotbar, start)
+  start = start or ""
+
   if hotbar ~= false then
     hotbar = gui.get_hotbar_itemslot_bg(x, y, w, 1)
   else
     hotbar = ""
   end
 
-  return "list["..location..";"..name..";"..x..","..y..";"..w..","..h..";]"
+  return "list["..location..";"..name..";"..x..","..y..";"..w..","..h..";"..start.."]"
     ..hotbar..gui.get_itemslot_bg(x, y, w, h)
 end
 
@@ -191,7 +193,10 @@ function gui.make_button(x, y, w, h, name, label, noclip, exit)
     type = "image_button_exit"
   end
 
-  if w == 2 then
+  if w == 1 then
+    return type.."["..x..","..y..";"..w..","..h..";gui_button_1w_inactive.png;"
+      ..name..";"..label..";"..nc..";false;gui_button_1w_active.png]"
+  elseif w == 2 then
     return type.."["..x..","..y..";"..w..","..h..";gui_button_2w_inactive.png;"
       ..name..";"..label..";"..nc..";false;gui_button_2w_active.png]"
   else

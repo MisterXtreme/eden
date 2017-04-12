@@ -44,7 +44,7 @@ The Inventory Formspec API (also known as ifAPI) allows you to register inventor
 
 * Generate formstring for a button
 * `x`, `y`: Placement on x and y axis
-* `w`, `h`: Inventory width, height __Note:__ Only widths of `2` and `3` are supported
+* `w`, `h`: Inventory width, height __Note:__ Only widths of `1`, `2`, and `3` are supported
 * `name`: Name of button as returned in fields
 * `label`: Text shown on button
 * `noclip=true`: Allow button to be shown outside the formspec
