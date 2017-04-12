@@ -10,12 +10,18 @@ local forms = {}
 ---
 
 -- [local function] Preprocess
-local function pre(name, form)
+local function pre(name, form, group)
   form = "size[9.5,9]"..form..gui.colors..gui.bg.."background[0,0;9.5,9;gui_formspec_bg.png]"
+
+  local tab  = gui.get_tab(name)
+  local tabs = forms
+  if group then
+    tabs = gui.get_tabs_by_group(group)
+  end
 
   local x, y = -0.9, 0.5
   -- Generate tabs
-  for _, f in pairs(forms) do
+  for _, f in pairs(tabs) do
     local icon = f.icon or "gui_null.png"
     local tooltip = f.tooltip or ""
     local shifted_icon = "[combine:16x16:0,0=gui_tab_active.png:0,1="..icon
@@ -90,6 +96,29 @@ function gui.get_tab(name)
   end
 end
 
+-- [function] Get tabs by group
+function gui.get_tabs_by_group(group)
+  local tabs = {}
+  for _, f in pairs(forms) do
+    if f.groups[group] then
+      tabs[#tabs + 1] = f
+    end
+  end
+  return tabs
+end
+
+-- [function] Get group default tab
+function gui.get_group_default(group)
+  local tabs = gui.get_tabs_by_group(group)
+  if tabs then
+    for _, f in pairs(tabs) do
+      if f.default then
+        return f
+      end
+    end
+  end
+end
+
 -- [function] Set current tab
 function gui.set_current_tab(player, formname)
   if type(player) == "string" then
@@ -102,6 +131,20 @@ function gui.set_current_tab(player, formname)
 
     player:set_inventory_formspec(pre(f.name, f.get(name)))
     player:set_attribute("inv_form", "gui:"..f.name)
+  end
+end
+
+-- [function] Set tab group
+function gui.set_tab_group(player, group)
+  if type(player) == "string" then
+    player = minetest.get_player_by_name(player)
+  end
+  local name = player:get_player_name()
+
+  local default = gui.get_group_default(group)
+  if default then
+    player:set_inventory_formspec(pre(default.name, default.get(name), group))
+    player:set_attribute("inv_form", "gui:"..default.name)
   end
 end
 

@@ -50,12 +50,29 @@ The Inventory Formspec API (also known as ifAPI) allows you to register inventor
 * `noclip=true`: Allow button to be shown outside the formspec
 * `exit=true`: Exit formspec on button click
 
+`gui.get_tabs_by_group(group)`
+
+* Get all tabs with a specific group
+* `group`: Group name
+
+`gui.get_group_default(group)`
+
+* Get default tab of a specific group
+* `group`: Group name
+
+`gui.set_tab_group(player, group)`
+
+* Set the formspec tab group to be shown (allows player to choose between only tabs whose group matches rather than all tabs)
+* `player`: PlayerRef (or player name)
+* `group`: Group name
+
 #### Tab definition
 ```lua
 {
   icon = "tab_inventory.png",
   tooltip = "Inventory",
   default = true, -- Set tab to default
+  groups = { survival = true, creative = false}, -- Tab groups allow grouping multiple tabs together
   get = function(name) -- Get formspec string (must return a formstring)
     return [[
       label[0,0;Hello world!]
