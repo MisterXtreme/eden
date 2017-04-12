@@ -8,6 +8,12 @@ minetest.register_on_joinplayer(function(player)
   eden.set_gamemode(player, eden.get_gamemode(player))
 end)
 
+-- [register] On place node
+minetest.register_on_placenode(function(pos, newnode, player, oldnode, itemstack)
+  local mode = gamemodes[eden.get_gamemode(player)]
+  return mode.stack_unlimited
+end)
+
 ---
 --- API
 ---
@@ -97,6 +103,7 @@ eden.register_gamemode("creative", {
   tab_group = "creative",
   hand = true,
   range = 10,
+  stack_unlimited = true,
   hand_capabilities = {
 		full_punch_interval = 0.5,
 		max_drop_level = 3,
