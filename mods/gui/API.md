@@ -66,6 +66,17 @@ The Inventory Formspec API (also known as ifAPI) allows you to register inventor
 * `player`: PlayerRef (or player name)
 * `group`: Group name
 
+`gui.init_creative_inv(player)`
+
+* Initialize detached creative inventory for a player
+* `player`: PlayerRef
+
+`gui.update_creative_inv(player_name, content)`
+
+* Update creative inventory for a player
+* `player_name`: Name of player
+* `content`: Table containing a list of nodes/craftitems
+
 #### Tab definition
 ```lua
 {
