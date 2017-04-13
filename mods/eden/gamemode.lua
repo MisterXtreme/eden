@@ -75,6 +75,13 @@ function eden.get_gamemode(player)
   return gm
 end
 
+-- [function] Get gamemode definition
+function eden.get_gamemode_def(name)
+  if gamemodes[name] then
+    return gamemodes[name]
+  end
+end
+
 ---
 --- Registrations
 ---
@@ -104,6 +111,7 @@ eden.register_gamemode("creative", {
   hand = true,
   range = 10,
   stack_unlimited = true,
+  item_drops = "auto",
   hand_capabilities = {
 		full_punch_interval = 0.5,
 		max_drop_level = 3,
