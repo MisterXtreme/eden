@@ -34,3 +34,5 @@ dofile(modpath.."/liquids.lua")
 dofile(modpath.."/mapgen.lua")
 -- Load chatcommands
 dofile(modpath.."/chatcommands.lua")
+-- Load wield view
+dofile(modpath.."/wield.lua")
