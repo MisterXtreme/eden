@@ -1,12 +1,22 @@
--- eden/liquids.lua
+-- Eden mod: liquid
+-- See README.txt for licensing and other information.
+
+WATER_ALPHA = 160
+WATER_VISC = 1
+LAVA_VISC = 7
+LIGHT_MAX = 14
+
+---
+--- Registrations
+---
 
 -- [register] Water source
-minetest.register_node("eden:water_source", {
+minetest.register_node("liquid:water_source", {
 	description = "Water Source",
 	drawtype = "liquid",
 	tiles = {
 		{
-			name = "eden_water_source_animated.png",
+			name = "liquid_water_source_animated.png",
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
@@ -18,7 +28,7 @@ minetest.register_node("eden:water_source", {
 	special_tiles = {
 		-- New-style water source material (mostly unused)
 		{
-			name = "eden_water_source_animated.png",
+			name = "liquid_water_source_animated.png",
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
@@ -38,21 +48,21 @@ minetest.register_node("eden:water_source", {
 	drop = "",
 	drowning = 1,
 	liquidtype = "source",
-	liquid_alternative_flowing = "eden:water_flowing",
-	liquid_alternative_source = "eden:water_source",
+	liquid_alternative_flowing = "liquid:water_flowing",
+	liquid_alternative_source = "liquid:water_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 103, r = 30, g = 60, b = 90},
 	groups = {water = 3, liquid = 3, puts_out_fire = 1, cools_lava = 1},
 })
 
 -- [register] Flowing water
-minetest.register_node("eden:water_flowing", {
+minetest.register_node("liquid:water_flowing", {
 	description = "Flowing Water",
 	drawtype = "flowingliquid",
-	tiles = {"eden_water.png"},
+	tiles = {"liquid_water.png"},
 	special_tiles = {
 		{
-			name = "eden_water_flowing_animated.png",
+			name = "liquid_water_flowing_animated.png",
 			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
@@ -62,7 +72,7 @@ minetest.register_node("eden:water_flowing", {
 			},
 		},
 		{
-			name = "eden_water_flowing_animated.png",
+			name = "liquid_water_flowing_animated.png",
 			backface_culling = true,
 			animation = {
 				type = "vertical_frames",
@@ -83,8 +93,8 @@ minetest.register_node("eden:water_flowing", {
 	drop = "",
 	drowning = 1,
 	liquidtype = "flowing",
-	liquid_alternative_flowing = "eden:water_flowing",
-	liquid_alternative_source = "eden:water_source",
+	liquid_alternative_flowing = "liquid:water_flowing",
+	liquid_alternative_source = "liquid:water_source",
 	liquid_viscosity = 1,
 	post_effect_color = {a = 103, r = 30, g = 60, b = 90},
 	groups = {water = 3, liquid = 3, puts_out_fire = 1,
@@ -92,12 +102,12 @@ minetest.register_node("eden:water_flowing", {
 })
 
 -- [register] River water source
-minetest.register_node("eden:river_water_source", {
+minetest.register_node("liquid:river_water_source", {
 	description = "River Water Source",
 	drawtype = "liquid",
 	tiles = {
 		{
-			name = "eden_river_water_source_animated.png",
+			name = "liquid_river_water_source_animated.png",
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
@@ -108,7 +118,7 @@ minetest.register_node("eden:river_water_source", {
 	},
 	special_tiles = {
 		{
-			name = "eden_river_water_source_animated.png",
+			name = "liquid_river_water_source_animated.png",
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
@@ -128,8 +138,8 @@ minetest.register_node("eden:river_water_source", {
 	drop = "",
 	drowning = 1,
 	liquidtype = "source",
-	liquid_alternative_flowing = "eden:river_water_flowing",
-	liquid_alternative_source = "eden:river_water_source",
+	liquid_alternative_flowing = "liquid:river_water_flowing",
+	liquid_alternative_source = "liquid:river_water_source",
 	liquid_viscosity = 1,
 	liquid_renewable = false,
 	liquid_range = 2,
@@ -138,13 +148,13 @@ minetest.register_node("eden:river_water_source", {
 })
 
 -- [register] Flowing river water
-minetest.register_node("eden:river_water_flowing", {
+minetest.register_node("liquid:river_water_flowing", {
 	description = "Flowing River Water",
 	drawtype = "flowingliquid",
-	tiles = {"eden_river_water.png"},
+	tiles = {"liquid_river_water.png"},
 	special_tiles = {
 		{
-			name = "eden_river_water_flowing_animated.png",
+			name = "liquid_river_water_flowing_animated.png",
 			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
@@ -154,7 +164,7 @@ minetest.register_node("eden:river_water_flowing", {
 			},
 		},
 		{
-			name = "eden_river_water_flowing_animated.png",
+			name = "liquid_river_water_flowing_animated.png",
 			backface_culling = true,
 			animation = {
 				type = "vertical_frames",
@@ -175,8 +185,8 @@ minetest.register_node("eden:river_water_flowing", {
 	drop = "",
 	drowning = 1,
 	liquidtype = "flowing",
-	liquid_alternative_flowing = "eden:river_water_flowing",
-	liquid_alternative_source = "eden:river_water_source",
+	liquid_alternative_flowing = "liquid:river_water_flowing",
+	liquid_alternative_source = "liquid:river_water_source",
 	liquid_viscosity = 1,
 	liquid_renewable = false,
 	liquid_range = 2,
@@ -186,12 +196,12 @@ minetest.register_node("eden:river_water_flowing", {
 })
 
 -- [register] Lava source
-minetest.register_node("eden:lava_source", {
+minetest.register_node("liquid:lava_source", {
 	description = "Lava Source",
 	drawtype = "liquid",
 	tiles = {
 		{
-			name = "eden_lava_source_animated.png",
+			name = "liquid_lava_source_animated.png",
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
@@ -203,7 +213,7 @@ minetest.register_node("eden:lava_source", {
 	special_tiles = {
 		-- New-style lava source material (mostly unused)
 		{
-			name = "eden_lava_source_animated.png",
+			name = "liquid_lava_source_animated.png",
 			animation = {
 				type = "vertical_frames",
 				aspect_w = 16,
@@ -223,8 +233,8 @@ minetest.register_node("eden:lava_source", {
 	drop = "",
 	drowning = 1,
 	liquidtype = "source",
-	liquid_alternative_flowing = "eden:lava_flowing",
-	liquid_alternative_source = "eden:lava_source",
+	liquid_alternative_flowing = "liquid:lava_flowing",
+	liquid_alternative_source = "liquid:lava_source",
 	liquid_viscosity = 7,
 	liquid_renewable = false,
 	damage_per_second = 4 * 2,
@@ -233,13 +243,13 @@ minetest.register_node("eden:lava_source", {
 })
 
 -- [register] Flowing lava
-minetest.register_node("eden:lava_flowing", {
+minetest.register_node("liquid:lava_flowing", {
 	description = "Flowing Lava",
 	drawtype = "flowingliquid",
-	tiles = {"eden_lava.png"},
+	tiles = {"liquid_lava.png"},
 	special_tiles = {
 		{
-			name = "eden_lava_flowing_animated.png",
+			name = "liquid_lava_flowing_animated.png",
 			backface_culling = false,
 			animation = {
 				type = "vertical_frames",
@@ -249,7 +259,7 @@ minetest.register_node("eden:lava_flowing", {
 			},
 		},
 		{
-			name = "eden_lava_flowing_animated.png",
+			name = "liquid_lava_flowing_animated.png",
 			backface_culling = true,
 			animation = {
 				type = "vertical_frames",
@@ -270,8 +280,8 @@ minetest.register_node("eden:lava_flowing", {
 	drop = "",
 	drowning = 1,
 	liquidtype = "flowing",
-	liquid_alternative_flowing = "eden:lava_flowing",
-	liquid_alternative_source = "eden:lava_source",
+	liquid_alternative_flowing = "liquid:lava_flowing",
+	liquid_alternative_source = "liquid:lava_source",
 	liquid_viscosity = 7,
 	liquid_renewable = false,
 	damage_per_second = 4 * 2,

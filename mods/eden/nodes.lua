@@ -1,8 +1,5 @@
 -- eden/nodes.lua
 
-WATER_ALPHA = 160
-WATER_VISC = 1
-LAVA_VISC = 7
 LIGHT_MAX = 14
 
 -- [register] Stone

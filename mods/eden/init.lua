@@ -28,8 +28,6 @@ dofile(modpath.."/gamemode.lua")
 dofile(modpath.."/item_entity.lua")
 -- Load nodes
 dofile(modpath.."/nodes.lua")
--- Load liquids
-dofile(modpath.."/liquids.lua")
 -- Load mapgen
 dofile(modpath.."/mapgen.lua")
 -- Load chatcommands
