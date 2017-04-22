@@ -7,6 +7,14 @@ LAVA_VISC = 7
 LIGHT_MAX = 14
 
 ---
+--- Mapgen
+---
+
+minetest.register_alias("mapgen_water_source", "liquid:water_source")
+minetest.register_alias("mapgen_river_water_source", "liquid:river_water_source")
+minetest.register_alias("mapgen_lava_source", "liquid:lava_source")
+
+---
 --- Registrations
 ---
 

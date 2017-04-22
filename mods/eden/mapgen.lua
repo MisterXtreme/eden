@@ -9,9 +9,6 @@ minetest.register_alias("mapgen_stone", "eden:stone")
 minetest.register_alias("mapgen_dirt", "eden:dirt")
 minetest.register_alias("mapgen_dirt_with_grass", "eden:dirt_with_grass")
 minetest.register_alias("mapgen_sand", "eden:sand")
-minetest.register_alias("mapgen_water_source", "eden:water_source")
-minetest.register_alias("mapgen_river_water_source", "eden:river_water_source")
-minetest.register_alias("mapgen_lava_source", "eden:lava_source")
 minetest.register_alias("mapgen_cobble", "eden:cobble")
 
 
