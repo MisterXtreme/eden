@@ -103,7 +103,7 @@ eden.register_gamemode("survival", {
 	},
 })
 
-local digtime = 0
+local digtime = 25
 local caps = {times = {digtime, digtime, digtime}, uses = 0, maxlevel = 256}
 
 eden.register_gamemode("creative", {
