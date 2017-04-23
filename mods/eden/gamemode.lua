@@ -3,6 +3,10 @@
 local gamemodes = {}
 local creative  = minetest.setting_getbool("creative_mode")
 
+---
+--- Callbacks
+---
+
 -- [register] On join set gamemode
 minetest.register_on_joinplayer(function(player)
   eden.set_gamemode(player, eden.get_gamemode(player))
@@ -13,6 +17,16 @@ minetest.register_on_placenode(function(pos, newnode, player, oldnode, itemstack
   local mode = gamemodes[eden.get_gamemode(player)]
   return mode.stack_unlimited
 end)
+
+-- [register] On hp change
+minetest.register_on_player_hpchange(function(player, hp_change)
+  local def = eden.get_gamemode_def(eden.get_gamemode(player))
+  if def.damage == false then
+    return 0
+  else
+    return hp_change
+  end
+end, true)
 
 ---
 --- API
@@ -112,6 +126,8 @@ eden.register_gamemode("creative", {
   range = 10,
   stack_unlimited = true,
   item_drops = "auto",
+  damage = false,
+  breath = false,
   hand_capabilities = {
 		full_punch_interval = 0.5,
 		max_drop_level = 3,

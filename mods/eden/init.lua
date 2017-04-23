@@ -34,3 +34,5 @@ dofile(modpath.."/mapgen.lua")
 dofile(modpath.."/chatcommands.lua")
 -- Load wield view
 dofile(modpath.."/wield.lua")
+-- Load HUD
+dofile(modpath.."/hud.lua")
