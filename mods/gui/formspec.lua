@@ -10,11 +10,12 @@ local forms = {}
 ---
 
 -- [local function] Preprocess
-local function pre(name, form, group)
+local function pre(player, name, form, group)
   form = "size[9.5,9]"..form..gui.colors..gui.bg.."background[0,0;9.5,9;gui_formspec_bg.png]"
 
   local tab  = gui.get_tab(name)
   local tabs = forms
+  local group = group or gui.get_inv_group(player)
   if group then
     tabs = gui.get_tabs_by_group(group)
   end
@@ -122,8 +123,20 @@ function gui.set_current_tab(player, formname)
   if gui.get_tab(formname) then
     local f = gui.get_tab(formname)
 
-    player:set_inventory_formspec(pre(f.name, f.get(name)))
+    player:set_inventory_formspec(pre(player, f.name, f.get(name)))
     player:set_attribute("inv_form", "gui:"..f.name)
+  end
+end
+
+-- [function] Get player inventory group
+function gui.get_inv_group(player)
+  if type(player) == "string" then
+    player = minetest.get_player_by_name(player)
+  end
+
+  local attr = player:get_attribute("inv_tab_group")
+  if attr and attr ~= "" then
+    return attr
   end
 end
 
@@ -134,9 +147,12 @@ function gui.set_tab_group(player, group)
   end
   local name = player:get_player_name()
 
+  -- Set attribute
+  player:set_attribute("inv_tab_group", group)
+
   local default = gui.get_group_default(group)
   if default then
-    player:set_inventory_formspec(pre(default.name, default.get(name), group))
+    player:set_inventory_formspec(pre(player, default.name, default.get(name), group))
     player:set_attribute("inv_form", "gui:"..default.name)
   end
 end
