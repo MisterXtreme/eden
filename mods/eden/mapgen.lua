@@ -6,9 +6,9 @@
 
 
 minetest.register_alias("mapgen_stone", "eden:stone")
-minetest.register_alias("mapgen_dirt", "eden:dirt")
-minetest.register_alias("mapgen_dirt_with_grass", "eden:dirt_with_grass")
-minetest.register_alias("mapgen_sand", "eden:sand")
+minetest.register_alias("mapgen_dirt", "soil:dirt")
+minetest.register_alias("mapgen_dirt_with_grass", "soil:dirt_with_grass")
+minetest.register_alias("mapgen_sand", "soil:sand")
 minetest.register_alias("mapgen_cobble", "eden:cobble")
 
 
@@ -23,9 +23,9 @@ minetest.clear_registered_decorations()
 minetest.register_biome({
 	name = "eden:grassland",
 	--node_dust = "",
-	node_top = "eden:dirt_with_grass",
+	node_top = "soil:dirt_with_grass",
 	depth_top = 1,
-	node_filler = "eden:dirt",
+	node_filler = "soil:dirt",
 	depth_filler = 1,
 	--node_stone = "",
 	--node_water_top = "",
@@ -40,9 +40,9 @@ minetest.register_biome({
 minetest.register_biome({
 	name = "eden:grassland_ocean",
 	--node_dust = "",
-	node_top = "eden:sand",
+	node_top = "soil:sand",
 	depth_top = 1,
-	node_filler = "eden:sand",
+	node_filler = "soil:sand",
 	depth_filler = 2,
 	--node_stone = "",
 	--node_water_top = "",
