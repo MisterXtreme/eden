@@ -15,9 +15,8 @@ License: LGPL (relicensed)
 --- API
 ---
 
-local update_time = 0.3
-local timer = 0
 local player_wielding = {}
+
 local location = {
 	"Arm_Right",          -- default bone
 	{x=0, y=5.5, z=3},    -- default position
@@ -72,20 +71,22 @@ minetest.register_entity("eden:wield_entity", {
 
 -- [register] Globalstep
 minetest.register_globalstep(function(dtime)
-  -- Check timer
-	timer = timer + dtime
-	if timer < update_time then
-		return
-	end
-
-	local active_players = {}
   -- Add/update wielditem entity
 	for _, player in pairs(minetest.get_connected_players()) do
-		local name = player:get_player_name()
-		local wield = player_wielding[name]
-		if wield and wield.object then
-			local stack = player:get_wielded_item()
-			local item = stack:get_name() or ""
+		local name  = player:get_player_name()
+		local wield = player_wielding[name] or {}
+		local stack = player:get_wielded_item()
+		local item  = stack:get_name() or ""
+		local index = player:get_wield_index()
+
+		if wield.index == index then
+			if wield.item == item or wield.item == "" and item == "" then
+				return
+			end
+		end
+
+		if wield.object then
+			wield.index = index
 			if item ~= wield.item then
 				wield.item = item
 				if item == "" then
@@ -99,21 +100,7 @@ minetest.register_globalstep(function(dtime)
 		else
 			add_wield_entity(player)
 		end
-		active_players[name] = true
 	end
-
-  -- Check if wield entity should be removed
-	for name, wield in pairs(player_wielding) do
-		if not active_players[name] then
-			if wield.object then
-				wield.object:remove()
-			end
-			player_wielding[name] = nil
-		end
-	end
-
-  -- Reset timer
-	timer = 0
 end)
 
 -- [register] On leave player remove object
