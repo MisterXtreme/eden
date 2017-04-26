@@ -34,7 +34,7 @@ soil.register("dirt_with_grass", {
 		{name = "soil_dirt.png^soil_grass_side.png",
 		tileable_vertical = false}},
 	groups = {crumbly=3, soil=1},
-	drop = "eden:dirt",
+	drop = "soil:dirt",
 })
 
 -- [soil] Sand
