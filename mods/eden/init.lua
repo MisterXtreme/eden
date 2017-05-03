@@ -36,3 +36,5 @@ dofile(modpath.."/chatcommands.lua")
 dofile(modpath.."/wield.lua")
 -- Load HUD
 dofile(modpath.."/hud.lua")
+-- Load torch
+dofile(modpath.."/torch.lua")
