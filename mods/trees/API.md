@@ -31,6 +31,7 @@ Trees API
   basename = "Oak", -- Name to be concatenated for other nodes
   center = "trees_oak_log.png", -- Center (top/bottom) texture
   sides = "trees_oak_log_sides.png", -- Side texture
+  plank = "trees_oak_plank.png", -- Plank texture
   sapling = "trees_oak_sapling.png", -- Sapling texture
   leaf = "trees_oak_leaf.png", -- Leaf texture
   offset = { x = -3, y = -1, z = -3}, -- Placement offset (x and z typically half the width and depth of the tree, y typically -1)

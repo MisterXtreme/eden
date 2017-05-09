@@ -6,6 +6,23 @@ trees.registered = {}
 local path = minetest.get_modpath("trees").."/schematics"
 
 ---
+--- Prerequisites
+---
+
+-- [item] Stick
+minetest.register_craftitem("trees:stick", {
+	description = "Stick",
+	inventory_image = "trees_stick.png",
+})
+
+-- [recipe] Stick
+minetest.register_craft({
+	type = "shapeless",
+	output = "trees:stick 4",
+	recipe = {"group:plank"},
+})
+
+---
 --- API
 ---
 
@@ -87,6 +104,22 @@ function trees.register(name, def)
     },
     connects_to = {"trees:"..name.."_leaf"},
   })
+
+	-- Plank
+	minetest.register_node("trees:"..name.."_plank", {
+		basename = name,
+		description = def.basename.." Plank",
+		tiles = {def.plank},
+		is_ground_content = false,
+		groups = {choppy = 2, oddly_breakable_by_hand = 1, flammable = 1, plank = 1},
+	})
+
+	-- [recipe] Plank
+	minetest.register_craft({
+		type = "shapeless",
+		output = "trees:"..name.."_plank 4",
+		recipe = {"trees:"..name.."_large"},
+	})
 
   -- Leaf
   minetest.register_node("trees:"..name.."_leaf", {
@@ -211,6 +244,7 @@ trees.register("oak", {
   basename = "Oak",
   center = "trees_oak_log.png",
   sides = "trees_oak_log_sides.png",
+	plank = "trees_oak_plank.png",
   sapling = "trees_oak_sapling.png",
   leaf = "trees_oak_leaf.png",
   offset = { x = -3, y = -1, z = -3},
