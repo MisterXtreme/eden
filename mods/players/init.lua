@@ -1,12 +1,12 @@
--- Eden mod: player
--- Adapted from Minetest 0.4 mod: player
+-- Eden mod: players
+-- Adapted from Minetest 0.4 mod: players
 -- See README.txt for licensing and other information.
 
 -- Load API
-dofile(minetest.get_modpath("player").."/api.lua")
+dofile(minetest.get_modpath("players").."/api.lua")
 
--- [register] Default player appearance
-player.register_model("character.b3d", {
+-- [register] Default players appearance
+players.register_model("character.b3d", {
 	animation_speed = 30,
 	textures = {"character.png"},
 	animations = {

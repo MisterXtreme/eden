@@ -1,22 +1,22 @@
--- player/api.lua
+-- players/api.lua
 
-player = {}
-local temp = player
+players = {}
 
 -- Player animation blending
 -- Note: This is currently broken due to a bug in Irrlicht, leave at 0
 local animation_blend = 0
 
-temp.registered_models = {}
+players.registered_models = {}
 
 -- Local for speed.
-local models = temp.registered_models
+local models = players.registered_models
 
-function temp.register_model(name, def)
+-- [function] Register model
+function players.register_model(name, def)
 	models[name] = def
 
   if def.default_model then
-    temp.default_model = name
+    players.default_model = name
   end
 end
 
@@ -25,9 +25,10 @@ local player_model = {}
 local player_textures = {}
 local player_anim = {}
 local player_sneak = {}
-temp.attached = {}
+players.attached = {}
 
-function temp.get_animation(player)
+-- [function] Get player animation
+function players.get_animation(player)
 	local name = player:get_player_name()
 	return {
 		model = player_model[name],
@@ -36,8 +37,8 @@ function temp.get_animation(player)
 	}
 end
 
--- Called when a player's appearance needs to be updated
-function temp.set_model(player, model_name)
+-- [function] Set player model
+function players.set_model(player, model_name)
 	local name = player:get_player_name()
 	local model = models[model_name]
 	if model then
@@ -50,23 +51,25 @@ function temp.set_model(player, model_name)
 			visual = "mesh",
 			visual_size = model.visual_size or {x=1, y=1},
 		})
-		temp.set_animation(player, "stand")
+		players.set_animation(player, "stand")
 	else
 		player:set_properties({
-			textures = { "temp.png", "player_back.png", },
+			textures = { "players.png", "player_back.png", },
 			visual = "upright_sprite",
 		})
 	end
 	player_model[name] = model_name
 end
 
-function temp.set_textures(player, textures)
+-- [function] Set player textures (skin)
+function players.set_textures(player, textures)
 	local name = player:get_player_name()
 	player_textures[name] = textures
 	player:set_properties({textures = textures,})
 end
 
-function temp.set_animation(player, anim_name, speed)
+-- [function] Set player animation
+function players.set_animation(player, anim_name, speed)
 	local name = player:get_player_name()
 	if player_anim[name] == anim_name then
 		return
@@ -80,17 +83,29 @@ function temp.set_animation(player, anim_name, speed)
 	player:set_animation(anim, speed or model.animation_speed, animation_blend)
 end
 
--- Update appearance when the player joins
+-- [function] Set nametag colour
+function players.set_nametag_colour(player, colour)
+	colour = colour or {}
+	colour.a = colour.a or 255
+	colour.r = colour.r or 255
+	colour.g = colour.g or 255
+	colour.b = colour.b or 255
+
+	player:set_nametag_attributes({color = colour})
+end
+
+-- [on joinplayer] Update appearance
 minetest.register_on_joinplayer(function(player)
-  if not temp.default_model then
+  if not players.default_model then
     return
   end
 
-	temp.attached[player:get_player_name()] = false
-	temp.set_model(player, temp.default_model)
+	players.attached[player:get_player_name()] = false
+	players.set_model(player, players.default_model)
 	player:set_local_animation({x=0, y=79}, {x=168, y=187}, {x=189, y=198}, {x=200, y=219}, 30)
 end)
 
+-- [on leaveplayer] Remove from tables
 minetest.register_on_leaveplayer(function(player)
 	local name = player:get_player_name()
 	player_model[name] = nil
@@ -99,10 +114,10 @@ minetest.register_on_leaveplayer(function(player)
 end)
 
 -- Localize for better performance.
-local set_animation = temp.set_animation
-local attached = temp.attached
+local set_animation = players.set_animation
+local attached = players.attached
 
--- Check each player and apply animations
+-- [globalstep] Check each player and apply animations
 minetest.register_globalstep(function(dtime)
 	for _, player in pairs(minetest.get_connected_players()) do
 		local name = player:get_player_name()
@@ -121,6 +136,15 @@ minetest.register_globalstep(function(dtime)
 			-- Determine if the player is sneaking, and reduce animation speed if so
 			if controls.sneak then
 				animation_speed_mod = animation_speed_mod / 2
+			end
+
+			-- Determine if player sneak status has changed
+			if player_sneak[name] ~= controls.sneak then
+				if controls.sneak then
+					players.set_nametag_colour(player, {a = 0}) -- Update nametag
+				else
+					players.set_nametag_colour(player) -- Update nametag
+				end
 			end
 
 			-- Apply animations based on what the player is doing

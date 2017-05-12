@@ -1,4 +1,4 @@
-Eden mod: player
+Eden mod: players
 ================
 
 Authors of source code
