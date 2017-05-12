@@ -39,7 +39,7 @@ minetest.register_on_joinplayer(function(player)
     replace = "breath",
     position = { x = 0.5, y = 1 },
     size = { x = 24, y = 24 },
-    offset = { x = 20, y = -(48+24+16)},
+    offset = { x = 20, y = -(48+24+17)},
     texture = "bubble.png",
     background = "bubble_bg.png",
     min = 0,
