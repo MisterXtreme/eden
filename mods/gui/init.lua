@@ -13,3 +13,5 @@ end)
 
 -- Load formspecs
 dofile(modpath.."/formspec.lua")
+-- Load HUD
+dofile(modpath.."/hud.lua")

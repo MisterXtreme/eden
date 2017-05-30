@@ -1,4 +1,4 @@
--- eden/hud.lua
+-- gui/hud.lua
 
 -- [statbar] Health
 minetest.register_on_joinplayer(function(player)
