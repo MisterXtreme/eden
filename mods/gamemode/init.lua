@@ -44,7 +44,6 @@ end)
 
 -- [register] On hp change
 minetest.register_on_player_hpchange(function(player, hp_change)
-	minetest.log("HPCHANGE")
   local def = gamemode.def(gamemode.get(player))
   if def.damage == false then
     return 0
@@ -113,7 +112,6 @@ end
 
 -- [function] Set player gamemode
 function gamemode.set(player, gm_name)
-	minetest.log(dump(gamemode.def))
 	local gm = gamemode.def(gm_name)
   if gm then
     local name = player:get_player_name()
@@ -183,6 +181,10 @@ function gamemode.get(player)
     if creative then gm = "creative"
     else gm = "survival" end
   end
+
+	if not gamemode.def(gm) then
+		return "survival"
+	end
 
   return gm
 end
