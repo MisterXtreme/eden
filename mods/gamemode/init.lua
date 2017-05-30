@@ -162,6 +162,8 @@ function gamemode.set(player, gm_name)
     -- Update hand
     if gm.hand then
       player:get_inventory():set_stack("hand", 1, gm.hand)
+		else -- else, Reset hand
+			player:get_inventory():set_stack("hand", 1, "")
     end
 
 		minetest.set_player_privs(name, privs)
