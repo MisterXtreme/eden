@@ -21,3 +21,9 @@ Jordach (CC BY-SA 3.0):
 
 octacian (CC BY-SA 3.0):
   crosshair.png
+
+Jordan4ibanez (CC BY-SA 3.0):
+	eden_item_pickup.1.ogg
+	eden_item_pickup.2.ogg
+	eden_item_pickup.3.ogg
+	eden_item_pickup.4.ogg

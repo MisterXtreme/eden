@@ -1,5 +1,94 @@
 -- eden/item_entity.lua
 
+-- If item_entity_ttl is not set, enity will have default life time
+-- Setting it to -1 disables the feature
+local time_to_live = tonumber(minetest.settings:get("item_entity_ttl"))
+if not time_to_live then
+	time_to_live = 900
+end
+
+---
+--- Water flow functions by QwertyMine3 (MIT)
+--- Edited by TenPlus1, Rewritten by octacian
+---
+
+local function to_unit_vector(dir_vector)
+	local inv_roots = {
+		[0] = 1,
+		[1] = 1,
+		[2] = 0.70710678118655,
+		[4] = 0.5,
+		[5] = 0.44721359549996,
+		[8] = 0.35355339059327
+	}
+
+	local sum = dir_vector.x * dir_vector.x + dir_vector.z * dir_vector.z
+	return {
+		x = dir_vector.x * inv_roots[sum],
+		y = dir_vector.y,
+		z = dir_vector.z * inv_roots[sum]
+	}
+end
+
+local function node_ok(pos)
+	local node = minetest.get_node_or_nil(pos)
+	if minetest.registered_nodes[node.name] then
+		return node
+	end
+end
+
+local function is_liquid(node)
+	local def = minetest.registered_nodes[node.name]
+	if def.liquidtype == "flowing" or def.liquidtype == "source" then
+		return true
+	end
+end
+
+local function quick_flow_logic(node, pos_testing, direction)
+	local def = minetest.registered_nodes[node.name]
+	if def.liquidtype == "flowing" then
+		local node_testing = node_ok(pos_testing)
+		if not is_liquid(node_testing) then
+			return 0
+		end
+
+		local param2_testing = node_testing.param2
+		if param2_testing < node.param2 then
+			if (node.param2 - param2_testing) > 6 then
+				return -direction
+			else
+				return direction
+			end
+		elseif param2_testing > node.param2 then
+			if (param2_testing - node.param2) > 6 then
+				return direction
+			else
+				return -direction
+			end
+		end
+	end
+
+	return 0
+end
+
+local function quick_flow(pos, node)
+	local x, z = 0, 0
+	if not minetest.registered_nodes[node.name].groups.liquid then
+		return {x = 0, y = 0, z = 0}
+	end
+
+	x = x + quick_flow_logic(node, {x = pos.x - 1, y = pos.y, z = pos.z},-1)
+	x = x + quick_flow_logic(node, {x = pos.x + 1, y = pos.y, z = pos.z}, 1)
+	z = z + quick_flow_logic(node, {x = pos.x, y = pos.y, z = pos.z - 1},-1)
+	z = z + quick_flow_logic(node, {x = pos.x, y = pos.y, z = pos.z + 1}, 1)
+
+	return to_unit_vector({x = x, y = 0, z = z})
+end
+
+---
+--- END Water Flow
+---
+
 local builtin_item = minetest.registered_entities["__builtin:item"]
 
 local item = {
@@ -16,12 +105,12 @@ local item = {
 	end,
 
 	burn_up = function(self)
-		-- disappear in a smoke puff
 		self.object:remove()
 		local p = self.object:getpos()
-		minetest.sound_play("default_item_smoke", {
+		minetest.sound_play("eden_item_burn", {
 			pos = p,
 			max_hear_distance = 8,
+			gain = math.random(0.5, 2)
 		})
 		minetest.add_particlespawner({
 			amount = 3,
@@ -37,66 +126,164 @@ local item = {
 			minsize = 5,
 			maxsize = 5,
 			collisiondetection = true,
-			texture = "default_item_smoke.png"
+			texture = "eden_item_smoke.png"
 		})
 	end,
 
 	on_step = function(self, dtime)
-		builtin_item.on_step(self, dtime)
-
 		local object     = self.object
-		local lentity    = object:get_luaentity()
-		local itemstring = lentity.itemstring
+		local itemstring = self.itemstring
+		local pos        = object:getpos()
+		local node       = minetest.get_node_or_nil(pos)
 
-		-- Burning
-		if self.flammable then
-			-- flammable, check for igniters
-			self.ignite_timer = (self.ignite_timer or 0) + dtime
-			if self.ignite_timer > 10 then
-				self.ignite_timer = 0
+		if not itemstring or itemstring == "" then
+			object:remove()
+			return
+		end
 
-				local node = minetest.get_node_or_nil(self.object:getpos())
-				if not node then
+		self.age = self.age + dtime
+		if time_to_live > 0 and self.age > time_to_live then
+			self.object:remove()
+			return
+		end
+		local p = vector.new(pos)
+		p.y = p.y - 0.5
+		local tnode = minetest.get_node_or_nil(p)
+		if tnode == nil then
+			-- Don't infinitely fall into unloaded map
+			self.object:set_velocity({x = 0, y = 0, z = 0})
+			self.object:set_acceleration({x = 0, y = 0, z = 0})
+			self.physical_state = false
+			self.object:set_properties({physical = false})
+			return
+		end
+		local nn = tnode.name
+		-- If node is not registered or node is walkably solid and resting on nodebox
+		local v = object:get_velocity()
+		if not minetest.registered_nodes[nn] or minetest.registered_nodes[nn].walkable and v.y == 0 then
+			if self.physical_state then
+				local own_stack = ItemStack(self.itemstring)
+				-- Merge with close entities of the same item
+				for _, object in ipairs(minetest.get_objects_inside_radius(p, 0.8)) do
+					local obj = object:get_luaentity()
+					if obj and obj.name == "__builtin:item"
+							and obj.physical_state == false then
+						if self:try_merge_with(own_stack, object, obj) then
+							return
+						end
+					end
+				end
+				object:set_velocity({x = 0, y = 0, z = 0})
+				object:set_acceleration({x = 0, y = 0, z = 0})
+			end
+		else
+			if not self.physical_state then
+				object:set_velocity({x = 0, y = 0, z = 0})
+				object:set_acceleration({x = 0, y = -10, z = 0})
+				self.physical_state = true
+				object:set_properties({physical = true})
+			end
+		end
+
+		-- Environment-based interactions
+		if node and node.name ~= "air" then
+			local def = minetest.registered_nodes[node.name]
+
+			-- Burning
+			if minetest.get_item_group(node.name, "lava") > 0 then
+				if self.flammable then
+					self:burn_up()
+					return
+				else -- else, Ignite after a maximum of 10 seconds
+					self.ignite_timer = (self.ignite_timer or 0) + dtime
+
+					if self.ignite_timer > math.random(2, 10) then
+						self.ignite_timer = 0
+						self:burn_up()
+						return
+					end
+				end
+			elseif self.flammable then
+				-- Otherwise there'll be a chance based on its igniter value
+				local burn_chance = self.flammable
+					* minetest.get_item_group(node.name, "igniter")
+				if burn_chance > 0 and math.random(0, burn_chance) ~= 0 then
+					self:burn_up()
 					return
 				end
+			end
 
-				-- Immediately burn up flammable items in lava
-				if minetest.get_item_group(node.name, "lava") > 0 then
-					self:burn_up()
+			-- Move in flowing liquids
+			if def.liquidtype == "flowing" then
+				local vec = quick_flow(pos, node)
+				if vec then
+					object:set_velocity(vec)
+					self.flowing = true
+				end
+			end
+
+			-- Droplift
+			if def.liquidtype == "none" and def.drawtype == "normal" then
+				local new_pos = minetest.find_node_near(object:get_pos(), 1,  "air")
+				if new_pos then
+					object:move_to(new_pos)
 				else
-					--  otherwise there'll be a chance based on its igniter value
-					local burn_chance = self.flammable
-						* minetest.get_item_group(node.name, "igniter")
-					if burn_chance > 0 and math.random(0, burn_chance) ~= 0 then
-						self:burn_up()
-					end
+					object:remove()
+					return
 				end
 			end
 		end
 
-		-- Pickup
-		if not lentity.age then
-			lentity.age = 0
-		else
-			if lentity.age > 2 then
-				for _, player in ipairs(minetest.get_objects_inside_radius(object:getpos(), 1)) do
-					if player:is_player() then
-						local inv = player:get_inventory()
+		-- Stop water flow
+		if self.flowing and node then
+			local def = minetest.registered_nodes[node.name]
+			if def.liquidtype ~= "flowing" then
+				local def = minetest.registered_nodes[node.name]
+				object:setvelocity({x = 0, y = 0, z = 0})
+				object:move_to(vector.round(pos))
+				self.flowing = false
+			end
+		end
 
-						if inv and inv:room_for_item("main", ItemStack(itemstring)) then
-							inv:add_item("main", ItemStack(itemstring))
-							if itemstring ~= "" then
-								minetest.sound_play("eden_item_pickup", {
-									to_player = player:get_player_name(),
-									gain = 0.4,
-								})
+		-- Collection
+		if self.age > 1 then
+			local radius_magnet   = 2 -- Magnet radius (minimum: 1.7)
+			local radius_collect  = 0.2 -- Collection radius
+			local liquid_modifier = 2
+
+			for _, player in ipairs(minetest.get_objects_inside_radius(pos, radius_magnet)) do
+				if player:is_player() then
+					if not gamemode.can_interact(player) then
+						return
+					end
+
+					local inv  = player:get_inventory()
+					if inv and inv:room_for_item("main", ItemStack(itemstring)) then
+						local ppos = player:getpos()
+						ppos.y = ppos.y + 1.6
+
+						if node then
+							local def = minetest.registered_nodes[node.name]
+							if def.liquidtype == "flowing" or def.liquidtype == "source" then
+								radius_magnet = radius_magnet / liquid_modifier
+								radius_collect = radius_collect / liquid_modifier
 							end
+						end
+
+						if vector.distance(pos, ppos) <= radius_collect then
+							inv:add_item("main", ItemStack(itemstring))
+							minetest.sound_play("eden_item_pickup", {
+								pos = ppos,
+								max_hear_distance = 8,
+							})
 							object:remove()
+						elseif math.floor(vector.distance(pos, ppos)) <= radius_magnet then
+							local vec = vector.subtract(ppos, pos)
+							vec = vector.add(pos, vector.divide(vec, 2))
+							object:moveto(vec)
 						end
 					end
 				end
-			else
-				lentity.age = lentity.age + dtime
 			end
 		end
 	end,
@@ -107,8 +294,12 @@ function minetest.handle_node_drops(pos, drops, digger)
 		return
 	end
 
+	if not gamemode.can_interact(digger) then
+		return
+	end
+
 	local inv  = digger:get_inventory()
-	local mode = eden.get_gamemode_def(eden.get_gamemode(digger))
+	local mode = gamemode.def(gamemode.get(digger))
 
 	for _, item in ipairs(drops) do
 		local count, name
@@ -126,9 +317,45 @@ function minetest.handle_node_drops(pos, drops, digger)
 				inv:add_item("main", item)
 			end
 		else
-			for i=1,count do
+			for i=1, count do
 				minetest.add_item(pos, name)
 			end
+		end
+	end
+end
+
+function minetest.item_drop(itemstack, player, pos)
+	-- Use modified item drop only if dropped by a player
+	if player and player:is_player() then
+		if not gamemode.can_interact(player) then
+			return
+		end
+
+		local v = player:get_look_dir()
+		local vel = player:get_player_velocity()
+		local cs = itemstack:get_count()
+		pos.y = pos.y + 1.3
+
+		if player:get_player_control().sneak then
+			cs = 1
+		end
+		local item = itemstack:take_item(cs)
+		local obj  = minetest.add_item(pos, item)
+		if obj then
+			--dir = vector.add(vector.multiply(dir, 5), vel)
+			--dir.y = dir.y + 2
+			--obj:set_velocity(dir)
+			v.x = (v.x*5)+vel.x
+			v.y = ((v.y*5)+2)+vel.y
+			v.z = (v.z*5)+vel.z
+			obj:setvelocity(v)
+			obj:get_luaentity().dropped_by = player:get_player_name()
+
+			return itemstack
+		end
+	else -- else, Machine - use default item drop
+		if minetest.add_item(pos, itemstack) then
+			return itemstack
 		end
 	end
 end
