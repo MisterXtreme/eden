@@ -51,3 +51,40 @@ gamemode.register("creative", {
     fly = true, fast = true,
   },
 })
+
+-- [gamemode] Spectator
+gamemode.register("spectator", {
+	aliases = {"o", "2"},
+  tab_group = "spectator",
+  damage = false,
+  breath = false,
+	hand = {
+		range = 0,
+		on_use = function() return end,
+	},
+  hud_flags = {
+    hotbar = false,
+    crosshair = false,
+    wielditem = false,
+    minimap = false,
+  },
+  privileges = {
+    fly = true, noclip = true, fast = true, interact = false,
+  },
+  on_enable = function(player)
+    player:set_properties({
+			visual_size = {x = 0, y = 0},
+			makes_footstep_sound = false,
+			collisionbox = {0},
+		})
+    player:set_nametag_attributes({color = {a = 0}})
+  end,
+  on_disable = function(player)
+    player:set_properties({
+			visual_size = {x = 1, y = 1},
+			makes_footstep_sound = true,
+			collisionbox = {-0.3, -1, -0.3, 0.3, 1, 0.3}
+		})
+    player:set_nametag_attributes({color = {a = 255, r = 255, g = 255, b = 255}})
+  end,
+})
