@@ -22,8 +22,6 @@ minetest.register_on_joinplayer(function(player)
   end)
 end)
 
--- Load gamemode API
-dofile(modpath.."/gamemode.lua")
 -- Load item entity
 dofile(modpath.."/item_entity.lua")
 -- Load nodes
