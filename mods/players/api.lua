@@ -94,7 +94,7 @@ function players.set_nametag_colour(player, colour)
 	player:set_nametag_attributes({color = colour})
 end
 
--- [on joinplayer] Update appearance
+-- [on joinplayer] Update appearance/physics
 minetest.register_on_joinplayer(function(player)
   if not players.default_model then
     return
@@ -103,6 +103,9 @@ minetest.register_on_joinplayer(function(player)
 	players.attached[player:get_player_name()] = false
 	players.set_model(player, players.default_model)
 	player:set_local_animation({x=0, y=79}, {x=168, y=187}, {x=189, y=198}, {x=200, y=219}, 30)
+
+	-- Disable sneak glitch
+	player:set_physics_override({sneak_glitch = false})
 end)
 
 -- [on leaveplayer] Remove from tables
