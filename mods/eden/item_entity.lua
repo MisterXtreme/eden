@@ -318,7 +318,8 @@ function minetest.handle_node_drops(pos, drops, digger)
 			end
 		else
 			for i=1, count do
-				minetest.add_item(pos, name)
+				local obj = minetest.add_item(pos, name)
+				obj:get_luaentity().age = 0.5
 			end
 		end
 	end
