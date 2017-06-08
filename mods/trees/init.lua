@@ -169,6 +169,47 @@ function trees.register(name, def)
 		},
 	})
 
+	-- Fence
+	minetest.register_node("trees:"..name.."_fence", {
+		description = def.basename.." Fence",
+		inventory_image = "trees_fence_overlay.png^"..def.plank..
+				"^trees_fence_overlay.png^[makealpha:255,126,126",
+		inventory_image = "trees_fence_overlay.png^"..def.plank..
+				"^trees_fence_overlay.png^[makealpha:255,126,126",
+		tiles = {def.plank},
+		drawtype = "nodebox",
+		node_box = {
+			type = "connected",
+			fixed = {{-1/8, -1/2, -1/8, 1/8, 1/2, 1/8}},
+			connect_front = {{-1/16,3/16,-1/2,1/16,5/16,-1/8},
+				{-1/16,-5/16,-1/2,1/16,-3/16,-1/8}},
+			connect_left = {{-1/2,3/16,-1/16,-1/8,5/16,1/16},
+				{-1/2,-5/16,-1/16,-1/8,-3/16,1/16}},
+			connect_back = {{-1/16,3/16,1/8,1/16,5/16,1/2},
+				{-1/16,-5/16,1/8,1/16,-3/16,1/2}},
+			connect_right = {{1/8,3/16,-1/16,1/2,5/16,1/16},
+				{1/8,-5/16,-1/16,1/2,-3/16,1/16}},
+		},
+		collision_box = {
+			type = "fixed",
+			fixed = {{-1/4, -1/2, -1/4, 1/4, 0.9, 1/4}},
+		},
+		connects_to = {"group:fence", "group:plank", "group:log"},
+		sunlight_propagates = true,
+		is_ground_content = false,
+		paramtype = "light",
+		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, fence = 1},
+	})
+
+	-- [recipe] Fence
+	minetest.register_craft({
+		output = "trees:"..name.."_fence 4",
+		recipe = {
+			{"trees:"..name.."_plank", "trees:stick", "trees:"..name.."_plank"},
+			{"trees:"..name.."_plank", "trees:stick", "trees:"..name.."_plank"},
+		},
+	})
+
   -- Decoration
   local mapgen = def.mapgen
   mapgen.deco_type = "schematic"
