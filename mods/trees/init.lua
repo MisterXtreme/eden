@@ -136,6 +136,39 @@ function trees.register(name, def)
     groups = {snappy = 3, flammable = 2, leaves = 1},
   })
 
+	-- Wall Node
+	minetest.register_node("trees:"..name.."_wall", {
+		description = def.basename.." Wall",
+		drawtype = "nodebox",
+		node_box = {
+			type = "connected",
+			fixed = {{-1/4, -1/2, -1/4, 1/4, 1/2, 1/4}},
+			connect_front = {{-3/16, -1/2, -1/2,  3/16, 3/8, -1/4}},
+			connect_left = {{-1/2, -1/2, -3/16, -1/4, 3/8,  3/16}},
+			connect_back = {{-3/16, -1/2,  1/4,  3/16, 3/8,  1/2}},
+			connect_right = {{ 1/4, -1/2, -3/16,  1/2, 3/8,  3/16}},
+		},
+		collision_box = {
+			type = "fixed",
+			fixed = {{-1/4, -1/2, -1/4, 1/4, 0.9, 1/4}},
+		},
+		connects_to = {"group:wall", "group:plank", "group:log"},
+		paramtype = "light",
+		is_ground_content = false,
+		tiles = {def.sides},
+		walkable = true,
+		groups = {choppy = 2, oddly_breakable_by_hand = 2, flammable = 2, wall = 1}
+	})
+
+	-- [recipe] Wall
+	minetest.register_craft({
+		output = "trees:"..name.."_wall 6",
+		recipe = {
+			{"trees:"..name.."_plank", "trees:"..name.."_plank", "trees:"..name.."_plank"},
+			{"trees:"..name.."_plank", "trees:"..name.."_plank", "trees:"..name.."_plank"},
+		},
+	})
+
   -- Decoration
   local mapgen = def.mapgen
   mapgen.deco_type = "schematic"
