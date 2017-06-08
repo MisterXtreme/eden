@@ -260,7 +260,7 @@ local item = {
 					local inv  = player:get_inventory()
 					if inv and inv:room_for_item("main", ItemStack(itemstring)) then
 						local ppos = player:getpos()
-						ppos.y = ppos.y + 1.6
+						ppos.y = ppos.y + 1.3
 
 						if node then
 							local def = minetest.registered_nodes[node.name]
