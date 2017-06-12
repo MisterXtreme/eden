@@ -325,6 +325,7 @@ local items = minetest.registered_items
 
 -- [register] Creative inventory tab
 gui.register_tab("creative", {
+	icon = "gui_icon_creative.png",
   tooltip = "Creative inventory",
   groups = {creative = true},
   get = function(name)
