@@ -321,6 +321,23 @@ gui.register_tab("inventory", {
       gui.make_inv(6.25, 2, 1, 1, "current_player", "craftpreview", false) ..
       gui.make_inv(0.25, 4.7, 9, 4, "current_player", "main")
   end,
+	handle = function(name, fields)
+		if fields.quit then
+			local player = minetest.get_player_by_name(name)
+			local inv = player:get_inventory()
+
+			if not inv:is_empty("craft") then
+				local list = inv:get_list("craft")
+				for _, i in pairs(list) do
+					if i:is_known() and not i:is_empty() then
+						minetest.item_drop(i, player, player:get_pos())
+					end
+				end
+
+				inv:set_list("craft", {})
+			end
+		end
+	end,
 })
 
 local items = minetest.registered_items
