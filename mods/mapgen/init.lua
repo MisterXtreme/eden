@@ -17,3 +17,11 @@ minetest.register_alias("mapgen_cobble", "eden:cobble")
 ---
 
 dofile(modpath.."/biomes.lua")
+
+---
+--- Load Optional Resources
+---
+
+if minetest.settings:get("mapgen_rotate_textures") == "true" then
+	dofile(modpath.."/rotate.lua")
+end
