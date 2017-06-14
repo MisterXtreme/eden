@@ -94,6 +94,23 @@ function tools.register(basename, basestack, def)
 			},
 		})
 	end
+
+	if def.sword then
+		minetest.register_tool("tools:"..basestack.."_sword", {
+			description = basename.." Sword",
+			inventory_image = def.sword[1],
+			tool_capabilities = def.sword[2],
+		})
+
+		minetest.register_craft({
+			output = "tools:"..basestack.."_sword",
+			recipe = {
+				{def.material},
+				{"trees:stick"},
+				{"trees:stick"},
+			}
+		})
+	end
 end
 
 ---

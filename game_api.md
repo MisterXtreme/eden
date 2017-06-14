@@ -342,5 +342,8 @@ tools.register("Diamond", "diamond", {
 	hoe = {"tools_diamond_hoe.png", {
 		-- Capabilities
 	}},
+	sword = {"tools_diamond_sword.png", {
+		-- Capabilities
+	}},
 })
 ```
