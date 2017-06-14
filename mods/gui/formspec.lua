@@ -316,6 +316,8 @@ gui.register_tab("inventory", {
     return
       gui.make_inv(2.3, 1, 3, 3, "current_player", "craft", false) ..
       "image[5.25,2;1,1;gui_arrow_bg.png^[transformR270]" ..
+			"listring[current_player;main]" ..
+			"listring[current_player;craft]" ..
       gui.make_inv(6.25, 2, 1, 1, "current_player", "craftpreview", false) ..
       gui.make_inv(0.25, 4.7, 9, 4, "current_player", "main")
   end,
