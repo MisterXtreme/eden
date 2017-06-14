@@ -28,9 +28,21 @@ minetest.register_craft({
 
 -- [function] Register tree
 function trees.register(name, def)
+	def.items = {
+		sapling = "trees:"..name,
+		large = "trees:"..name.."_large",
+		trunk = "trees:"..name.."_trunk",
+		log = "trees:"..name.."_log",
+		plank = "trees:"..name.."_plank",
+		leaf = "trees:"..name.."_leaf",
+		wall = "trees:"..name.."_wall",
+		fence = "trees:"..name.."_fence",
+	}
+	local items = def.items
+
   -- Sapling
-  minetest.register_node("trees:"..name, {
-    basename = name,
+  minetest.register_node(items.sapling, {
+		tree_type = name,
     description = def.basename.." Sapling",
     drawtype = "plantlike",
     inventory_image = def.sapling,
@@ -51,8 +63,8 @@ function trees.register(name, def)
   })
 
   -- Normal (large)
-  minetest.register_node("trees:"..name.."_large", {
-    basename = name,
+  minetest.register_node(items.large, {
+		tree_type = name,
     description = "Large "..def.basename.." Log",
     tiles = {def.center, def.sides},
     paramtype2 = "facedir",
@@ -62,8 +74,8 @@ function trees.register(name, def)
   })
 
   -- Trunk
-  minetest.register_node("trees:"..name.."_trunk", {
-    basename = name,
+  minetest.register_node(items.trunk, {
+		tree_type = name,
     description = def.basename.." Trunk",
     tiles = {def.center, def.sides},
 		paramtype = "light",
@@ -86,8 +98,8 @@ function trees.register(name, def)
   })
 
   -- Log
-  minetest.register_node("trees:"..name.."_log", {
-    basename = name,
+  minetest.register_node(items.log, {
+		tree_type = name,
     description = def.basename.." Log",
     tiles = {def.center, def.sides},
 		paramtype = "light",
@@ -108,8 +120,8 @@ function trees.register(name, def)
   })
 
 	-- Plank
-	minetest.register_node("trees:"..name.."_plank", {
-		basename = name,
+	minetest.register_node(items.plank, {
+		tree_type = name,
 		description = def.basename.." Plank",
 		tiles = {def.plank},
 		is_ground_content = false,
@@ -119,13 +131,13 @@ function trees.register(name, def)
 	-- [recipe] Plank
 	minetest.register_craft({
 		type = "shapeless",
-		output = "trees:"..name.."_plank 4",
+		output = items.plank.." 4",
 		recipe = {"trees:"..name.."_large"},
 	})
 
   -- Leaf
-  minetest.register_node("trees:"..name.."_leaf", {
-    basename = name,
+  minetest.register_node(items.leaf, {
+		tree_type = name,
     description = def.basename.." Leaf",
     tiles = {def.leaf},
     drawtype = "allfaces_optional",
@@ -137,7 +149,8 @@ function trees.register(name, def)
   })
 
 	-- Wall Node
-	minetest.register_node("trees:"..name.."_wall", {
+	minetest.register_node(items.wall, {
+		tree_type = name,
 		description = def.basename.." Wall",
 		drawtype = "nodebox",
 		node_box = {
@@ -162,15 +175,16 @@ function trees.register(name, def)
 
 	-- [recipe] Wall
 	minetest.register_craft({
-		output = "trees:"..name.."_wall 6",
+		output = items.wall.." 6",
 		recipe = {
-			{"trees:"..name.."_plank", "trees:"..name.."_plank", "trees:"..name.."_plank"},
-			{"trees:"..name.."_plank", "trees:"..name.."_plank", "trees:"..name.."_plank"},
+			{items.plank, items.plank, items.plank},
+			{items.plank, items.plank, items.plank},
 		},
 	})
 
 	-- Fence
-	minetest.register_node("trees:"..name.."_fence", {
+	minetest.register_node(items.fence, {
+		tree_type = name,
 		description = def.basename.." Fence",
 		inventory_image = "trees_fence_overlay.png^"..def.plank..
 				"^trees_fence_overlay.png^[makealpha:255,126,126",
@@ -203,21 +217,23 @@ function trees.register(name, def)
 
 	-- [recipe] Fence
 	minetest.register_craft({
-		output = "trees:"..name.."_fence 4",
+		output = items.fence.." 4",
 		recipe = {
-			{"trees:"..name.."_plank", "trees:stick", "trees:"..name.."_plank"},
-			{"trees:"..name.."_plank", "trees:stick", "trees:"..name.."_plank"},
+			{items.plank, "trees:stick", items.plank},
+			{items.plank, "trees:stick", items.plank},
 		},
 	})
 
   -- Decoration
-  local mapgen = def.mapgen
-  mapgen.deco_type = "schematic"
-  mapgen.sidelen = mapgen.sidelen or 16
-  mapgen.flags = "place_center_x, place_center_z"
-  mapgen.rotation = "random"
-  mapgen.schematic = path.."/"..def.schematic
-  minetest.register_decoration(mapgen)
+	if def.mapgen and def.schematic then
+	  local mapgen = def.mapgen
+	  mapgen.deco_type = "schematic"
+	  mapgen.sidelen = mapgen.sidelen or 16
+	  mapgen.flags = "place_center_x, place_center_z"
+	  mapgen.rotation = "random"
+	  mapgen.schematic = path.."/"..def.schematic
+	  minetest.register_decoration(mapgen)
+	end
 
   -- General
   def.name = name
@@ -233,10 +249,33 @@ function trees.register(name, def)
   trees.registered[name] = def
 end
 
+-- [function] Get name
+function trees.get_name(pos)
+	local node = minetest.get_node_or_nil(pos)
+	if node then
+		local def = minetest.registered_nodes[node.name]
+		if def.tree_type and trees.registered[def.tree_type] then
+			return def.tree_type
+		end
+	end
+end
+
+-- [function] Get definition
+function trees.get_def(pos)
+	local node = minetest.get_node_or_nil(pos)
+	if node then
+		local def = minetest.registered_nodes[node.name]
+		if def.tree_type and trees.registered[def.tree_type] then
+			return trees.registered[def.tree_type]
+		end
+	end
+end
+
 -- [function] Can grow
 function trees.can_grow(pos)
-  local node  = minetest.get_node(pos)
-  local def   = trees.registered[minetest.registered_nodes[node.name].basename]
+  local def = trees.get_def(pos)
+	if not def then return end
+
   local light = def.min_light
 
   local node_under = minetest.get_node_or_nil({x = pos.x, y = pos.y - 1, z = pos.z})
@@ -263,12 +302,12 @@ end
 function trees.place(name, pos)
   if trees.registered[name] then
     local tree = trees.registered[name]
-    if trees.schematic then
-      if trees.offset then
-        pos = vector.add(trees.offset, pos)
+    if tree.schematic then
+      if tree.offset then
+        pos = vector.add(tree.offset, pos)
       end
 
-      return minetest.place_schematic(pos, path.."/"..trees.schematic, "random",
+      return minetest.place_schematic(pos, path.."/"..tree.schematic, "random",
           nil, false)
     end
   end
@@ -276,18 +315,19 @@ end
 
 -- [function] Grow tree
 function trees.grow(pos)
-  local node = minetest.get_node(pos)
-  local name = minetest.registered_nodes[node.name].basename
-  local def  = trees.registered[name]
-
   if trees.can_grow(pos) then
+		local name     = trees.get_name(pos)
+		local basename = trees.get_def(pos).basename
     -- Log message
-    minetest.log("action", "A "..def.basename.." sapling grows into a tree at "..
+    minetest.log("action", "A "..basename.." sapling grows into a tree at "..
         minetest.pos_to_string(pos))
     -- Place tree
     trees.place(name, pos)
   else
-    minetest.get_node_timer(pos):start(math.random(def.time.retry_min, def.time.retry_max))
+		local def = trees.get_def(pos)
+		if def then
+    	minetest.get_node_timer(pos):start(math.random(def.time.retry_min, def.time.retry_max))
+		end
   end
 end
 

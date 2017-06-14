@@ -258,6 +258,18 @@ The trees API allows registering, checking, placing, and growing trees.
 * `name`: Name of tree (as in a node's itemstring)
 * `def`: See [#Tree definition]
 
+`trees.get_name(pos)`
+
+* Returns the tree name of a node at a position
+* If the node at the position specified is not part of a valid tree, `nil` will be returned
+* `pos`: Position of node related to tree
+
+`trees.get_def(pos)`
+
+* Returns the original tree definition of a node at a position
+* If the node at the position specified is not part of a valid tree, `nil` will be returned
+* `pos`: Position of node related to tree
+
 `trees.can_grow(pos)`
 
 * Returns `true` if the sapling can grow
