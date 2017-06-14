@@ -26,8 +26,6 @@ end)
 dofile(modpath.."/item_entity.lua")
 -- Load nodes
 dofile(modpath.."/nodes.lua")
--- Load mapgen
-dofile(modpath.."/mapgen.lua")
 -- Load chatcommands
 dofile(modpath.."/chatcommands.lua")
 -- Load wield view
