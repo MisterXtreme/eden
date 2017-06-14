@@ -107,11 +107,13 @@ The GUI API easily generates formstrings for custom elements and allows you to r
 * `player`: PlayerRef/Name of player
 * `tabname`: Name of previously registered tab
 
-`gui.get_itemslot_bg(x, y, w, h)`
+`gui.get_itemslot_bg(x, y, w, h, count)`
 
 * Get the itemslot background for inventories
 * `x`, `y`: Placement on x and y axis
 * `w`, `h`: Inventory width, height
+* `count`: How many background images should be generated (from right-to-left, top-to-bottom)
+* If `count` is `nil` the full width and height specified is filled
 
 `gui.get_hotbar_itemslot_bg(x, y, w, h)`
 
@@ -119,7 +121,7 @@ The GUI API easily generates formstrings for custom elements and allows you to r
 * `x`, `y`: Placement on x and y axis
 * `w`, `h`: Inventory width, height
 
-`gui.make_inv(x, y, w, h, location, name, hotbar)`
+`gui.make_inv(x, y, w, h, location, name, hotbar, start, strict_count)`
 
 * Generate formstring for an inventory
 * `x`, `y`: Placement on x and y axis
@@ -127,6 +129,9 @@ The GUI API easily generates formstrings for custom elements and allows you to r
 * `location`: Location of the inventory (e.g. `current_player`)
 * `name`: Name of the inventory (e.g. `main`)
 * `hotbar`: Boolean determinining whether the first row should be considered as connected to the hotbar
+* `start`: Integer determining at which itemstack index the formspec should begin to display the inventory contents
+* `strict_count`: Whether the number of item slot backgrounds should depend on the size or the number of items in the inventory
+* If the `location` is set to `context` and `strict_count` is used, `strict_count` should be a position, or if `location` is set to `current_player`, `strict_count` should be a player username
 
 `gui.make_button(x, y, w, h, name, label, noclip, exit)`
 

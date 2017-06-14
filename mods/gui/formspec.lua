@@ -158,14 +158,21 @@ function gui.set_tab_group(player, group)
 end
 
 -- [function] Get itemslot background
-function gui.get_itemslot_bg(x, y, w, h)
-   local out = ""
-   for i = 0, w - 1, 1 do
-      for j = 0, h - 1, 1 do
-	       out = out .."image["..x+i..","..y+j..";1,1;gui_itemslot.png]"
-      end
-   end
-   return out
+function gui.get_itemslot_bg(x, y, w, h, count)
+	local num = 0
+	local out = ""
+
+	for j = 0, h - 1, 1 do
+		for i = 0, w - 1, 1 do
+			out = out .."image["..x+i..","..y+j..";1,1;gui_itemslot.png]"
+			num = num + 1
+			if count and num >= count then
+				return out
+			end
+		end
+	end
+
+	return out
 end
 
 -- [function] Get hotbar itemslot background
@@ -180,7 +187,7 @@ function gui.get_hotbar_itemslot_bg(x, y, w, h)
 end
 
 -- [function] Make inventory
-function gui.make_inv(x, y, w, h, location, name, hotbar, start)
+function gui.make_inv(x, y, w, h, location, name, hotbar, start, strict_count)
   start = start or ""
 
   if hotbar ~= false then
@@ -189,8 +196,46 @@ function gui.make_inv(x, y, w, h, location, name, hotbar, start)
     hotbar = ""
   end
 
+	local count
+	if strict_count then
+		local inv
+		local split = location:split(":")
+		if location == "context" then
+			inv = minetest.get_inventory({type = "node", pos = strict_count})
+		elseif location == "current_player" then
+			if type(strict_count) == "userdata" then
+				strict_count = strict_count:get_player_name()
+			end
+
+			inv = minetest.get_inventory({type = "player", name = strict_count})
+		elseif split and split[1] == "player" and split[2] then
+			inv = minetest.get_inventory({type = "player", name = split[2]})
+		elseif split and split[1] == "nodemeta" and split[2] then
+			local pos = minetest.string_to_pos(split[2])
+			if pos then
+				inv = minetest.get_inventory({type = "node", pos = pos})
+			end
+		elseif split and split[1] == "detached" and split[2] then
+			inv = minetest.get_inventory({type = "detached", name = split[2]})
+		end
+
+		if inv then
+			local size = 0
+			local list = inv:get_list(name)
+			for _, i in pairs(list) do
+				if i:is_known() and not i:is_empty() then
+					size = size + 1
+				end
+			end
+
+			if size and size > 0 then
+				count = size
+			end
+		end
+	end
+
   return "list["..location..";"..name..";"..x..","..y..";"..w..","..h..";"..start.."]"
-    ..hotbar..gui.get_itemslot_bg(x, y, w, h)
+    ..hotbar..gui.get_itemslot_bg(x, y, w, h, (count or nil))
 end
 
 -- [function] Make button
@@ -341,7 +386,6 @@ gui.register_tab("inventory", {
 })
 
 local items = minetest.registered_items
-
 -- [register] Creative inventory tab
 gui.register_tab("creative", {
 	icon = "gui_icon_creative.png",
@@ -360,7 +404,7 @@ gui.register_tab("creative", {
       "listring[]" ..
       "listring[current_player;main]" ..
       "listring[detached:creative_" .. name .. ";main]" ..
-      gui.make_inv(0.25, 0.25, 9, 6, "detached:creative_" .. name, "main", false, tostring(start_i)) ..
+      gui.make_inv(0.25, 0.25, 9, 6, "detached:creative_" .. name, "main", false, tostring(start_i), true) ..
       "field[0.55,6.89;3.2,1;creative_filter;;" .. minetest.formspec_escape(inv.filter) .. "]" ..
       gui.make_button(6.65, 6.55, 1, 1, "creative_prev", "<") ..
       gui.make_button(8.34, 6.55, 1, 1, "creative_next", ">") ..
