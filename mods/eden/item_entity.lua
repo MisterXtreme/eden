@@ -102,6 +102,11 @@ local item = {
 		if itemdef and itemdef.groups.flammable ~= 0 then
 			self.flammable = itemdef.groups.flammable
 		end
+
+		-- Set ID
+		self.id = string.format("%04x%04x%04x%04x",
+				math.random(2^16) - 1, math.random(2^16) - 1,
+				math.random(2^16) - 1, math.random(2^16) - 1)
 	end,
 
 	burn_up = function(self)
@@ -149,39 +154,27 @@ local item = {
 		local p = vector.new(pos)
 		p.y = p.y - 0.5
 		local tnode = minetest.get_node_or_nil(p)
-		if tnode == nil then
-			-- Don't infinitely fall into unloaded map
-			self.object:set_velocity({x = 0, y = 0, z = 0})
-			self.object:set_acceleration({x = 0, y = 0, z = 0})
-			self.physical_state = false
-			self.object:set_properties({physical = false})
-			return
-		end
 		local nn = tnode.name
 		-- If node is not registered or node is walkably solid and resting on nodebox
 		local v = object:get_velocity()
 		if not minetest.registered_nodes[nn] or minetest.registered_nodes[nn].walkable and v.y == 0 then
-			if self.physical_state then
-				local own_stack = ItemStack(self.itemstring)
-				-- Merge with close entities of the same item
-				for _, object in ipairs(minetest.get_objects_inside_radius(p, 0.8)) do
-					local obj = object:get_luaentity()
-					if obj and obj.name == "__builtin:item"
-							and obj.physical_state == false then
-						if self:try_merge_with(own_stack, object, obj) then
-							return
-						end
+			local own_stack = ItemStack(self.itemstring)
+			-- Merge with close entities of the same item
+			for _, object in ipairs(minetest.get_objects_inside_radius(p, 0.8)) do
+				local obj = object:get_luaentity()
+				if obj and obj.name == "__builtin:item"
+				 		and self.id ~= obj.id then
+					if self:try_merge_with(own_stack, object, obj) then
+						return
 					end
 				end
-				object:set_velocity({x = 0, y = 0, z = 0})
-				object:set_acceleration({x = 0, y = 0, z = 0})
 			end
+			object:set_velocity({x = 0, y = 0, z = 0})
+			object:set_acceleration({x = 0, y = 0, z = 0})
 		else
-			if not self.physical_state then
+			if v.y == 0 then
 				object:set_velocity({x = 0, y = 0, z = 0})
 				object:set_acceleration({x = 0, y = -10, z = 0})
-				self.physical_state = true
-				object:set_properties({physical = true})
 			end
 		end
 
