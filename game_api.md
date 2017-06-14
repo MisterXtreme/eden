@@ -310,3 +310,32 @@ The trees API allows registering, checking, placing, and growing trees.
 }
 ```
 
+Tools API
+---------
+The tools API easily registers entire sets of tools.
+
+`tools.register(basename, basestack, def)`
+
+* Registers a set of tools depending on information provided
+* `basename`: Readable name to be used in tooltip
+* `basestack`: Name to be used in itemstack
+* `def`: See [#Tool definition]
+
+#### Tool Definition
+```lua
+tools.register("Diamond", "diamond", {
+  material = "ores:diamond",
+	pick = {"tools_diamond_pick.png", {
+		-- Capabilities
+	}},
+	axe = {"tools_diamond_axe.png", {
+		-- Capabilities
+	}},
+	shovel = {"tools_diamond_shovel.png", {
+		-- Capabilities
+	}},
+	hoe = {"tools_diamond_hoe.png", {
+		-- Capabilities
+	}},
+})
+```
