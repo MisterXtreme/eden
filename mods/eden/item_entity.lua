@@ -92,16 +92,56 @@ end
 local builtin_item = minetest.registered_entities["__builtin:item"]
 
 local item = {
+	initial_properties = {
+		hp_max = 1,
+		physical = true,
+		collide_with_objects = false,
+		collisionbox = {-0.3, -0.3, -0.3, 0.3, 0.3, 0.3},
+		visual = "wielditem",
+		visual_size = {x = 0.4, y = 0.4},
+		textures = {""},
+		spritediv = {x = 1, y = 1},
+		initial_sprite_basepos = {x = 0, y = 0},
+		is_visible = false,
+	},
+
 	on_punch = function() end,
 
 	set_item = function(self, itemstring)
-		builtin_item.set_item(self, itemstring)
-
+		self.itemstring = itemstring
 		local stack = ItemStack(itemstring)
+		local count = stack:get_count()
+		local max_count = stack:get_stack_max()
+		if count > max_count then
+			count = max_count
+			self.itemstring = stack:get_name().." "..max_count
+		end
+		local s = 0.2 + 0.1 * (count / max_count)
+		local c = s - 0.05
+		local itemtable = stack:to_table()
+		local itemname = nil
+		if itemtable then
+			itemname = stack:to_table().name
+		end
+		self.object:set_properties({
+			is_visible = true,
+			visual = "wielditem",
+			textures = {itemname},
+			visual_size = {x = s, y = s},
+			collisionbox = {-c, -c, -c, c, c, c},
+			wield_item = itemstring,
+		})
+
 		local itemdef = minetest.registered_items[stack:get_name()]
 		if itemdef and itemdef.groups.flammable ~= 0 then
 			self.flammable = itemdef.groups.flammable
 		end
+
+		--[[ NOTE: This has not yet been implemented in Minetest engine
+		if itemdef and itemdef.type == "tool" or itemdef.type == "craft" then
+			self.object:set_pitch(90)
+		end
+		]]--
 
 		-- Set ID
 		self.id = string.format("%04x%04x%04x%04x",
@@ -336,14 +376,12 @@ function minetest.item_drop(itemstack, player, pos)
 		local item = itemstack:take_item(cs)
 		local obj  = minetest.add_item(pos, item)
 		if obj then
-			--dir = vector.add(vector.multiply(dir, 5), vel)
-			--dir.y = dir.y + 2
-			--obj:set_velocity(dir)
 			v.x = (v.x*5)+vel.x
 			v.y = ((v.y*5)+2)+vel.y
 			v.z = (v.z*5)+vel.z
 			obj:setvelocity(v)
 			obj:get_luaentity().dropped_by = player:get_player_name()
+			obj:set_yaw(player:get_look_horizontal())
 
 			return itemstack
 		end
