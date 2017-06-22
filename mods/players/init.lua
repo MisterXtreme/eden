@@ -2,8 +2,10 @@
 -- Adapted from Minetest 0.4 mod: players
 -- See README.txt for licensing and other information.
 
+local modpath = minetest.get_modpath("players")
+
 -- Load API
-dofile(minetest.get_modpath("players").."/api.lua")
+dofile(modpath.."/api.lua")
 
 -- [register] Default players appearance
 players.register_model("character.b3d", {
@@ -20,3 +22,10 @@ players.register_model("character.b3d", {
 	},
 	default_model = true,
 })
+
+---
+--- Load Extra Resources
+---
+
+-- Load Sprinting
+dofile(modpath.."/sprint.lua")
