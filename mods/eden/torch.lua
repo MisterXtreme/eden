@@ -2,7 +2,7 @@
 --[[
 
 Torch mod - formerly mod "Torches"
-======================
+==============================
 
 (c) Copyright BlockMen (2013-2015)
 (C) Copyright sofar <sofar@foo-projects.org> (2016)
@@ -72,7 +72,7 @@ minetest.register_node("eden:torch", {
 		local wdir = minetest.dir_to_wallmounted(vector.subtract(under, above))
 		local fakestack = itemstack
 		if wdir == 0 then
-			fakestack:set_name("eden:torch_ceiling")
+			return
 		elseif wdir == 1 then
 			fakestack:set_name("eden:torch")
 		else
@@ -100,22 +100,5 @@ minetest.register_node("eden:torch_wall", {
 	selection_box = {
 		type = "wallmounted",
 		wall_side = {-1/2, -1/2, -1/8, -1/8, 1/8, 1/8},
-	},
-})
-
-minetest.register_node("eden:torch_ceiling", {
-	drawtype = "mesh",
-	mesh = "torch_ceiling.obj",
-	tiles = {"eden_torch.png"},
-	paramtype = "light",
-	paramtype2 = "wallmounted",
-	sunlight_propagates = true,
-	walkable = false,
-	light_source = 12,
-	groups = {choppy=2, dig_immediate=3, flammable=1, not_in_creative_inventory=1, attached_node=1, torch=1},
-	drop = "eden:torch",
-	selection_box = {
-		type = "wallmounted",
-		wall_top = {-1/8, -1/16, -5/16, 1/8, 1/2, 1/8},
 	},
 })
