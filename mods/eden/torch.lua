@@ -45,10 +45,7 @@ minetest.register_node("eden:torch", {
 	mesh = "torch_floor.obj",
 	inventory_image = "eden_torch.png",
 	wield_image = "eden_torch.png",
-	tiles = {{
-		    name = "eden_torch_floor_animated.png",
-		    animation = {type = "vertical_frames", aspect_w = 16, aspect_h = 16, length = 3.3}
-	}},
+	tiles = {"eden_torch.png"},
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,
@@ -92,10 +89,7 @@ minetest.register_node("eden:torch", {
 minetest.register_node("eden:torch_wall", {
 	drawtype = "mesh",
 	mesh = "torch_wall.obj",
-	tiles = {{
-		    name = "eden_torch_floor_animated.png",
-		    animation = {type = "vertical_frames", aspect_w = 16, aspect_h = 16, length = 3.3}
-	}},
+	tiles = {"eden_torch.png"},
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,
@@ -112,10 +106,7 @@ minetest.register_node("eden:torch_wall", {
 minetest.register_node("eden:torch_ceiling", {
 	drawtype = "mesh",
 	mesh = "torch_ceiling.obj",
-	tiles = {{
-		    name = "eden_torch_floor_animated.png",
-		    animation = {type = "vertical_frames", aspect_w = 16, aspect_h = 16, length = 3.3}
-	}},
+	tiles = {"eden_torch.png"},
 	paramtype = "light",
 	paramtype2 = "wallmounted",
 	sunlight_propagates = true,
