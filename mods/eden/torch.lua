@@ -39,6 +39,57 @@ See LICENSE.txt and http://www.gnu.org/licenses/lgpl-2.1.txt
 
 --]]
 
+local PARTICLES = minetest.settings:get("eden_torch_particles")
+
+if PARTICLES == "false" then
+	PARTICLES = false
+else
+	PARTICLES = true
+end
+
+---
+--- Functions
+---
+
+-- [function] Add particlespawner
+local function add(pos)
+	if PARTICLES then
+		local meta = minetest.get_meta(pos)
+		if meta then
+			local id = minetest.add_particlespawner({
+				time = 0,
+				minpos = {x = pos.x - 0.3, y = pos.y + 0.2, z = pos.z - 0.3},
+				maxpos = {x = pos.x + 0.3, y = pos.y + 0.3, z = pos.z + 0.3},
+				minvel = {x = 0, y = 0.2, z = 0},
+				maxvel = {x = 0, y = 1, z = 0},
+				minexptime = 1,
+				maxexptime = 2,
+				minsize = 0.5,
+				maxsize = 2,
+				collisiondetection = true,
+				collision_removal = true,
+				vertical = false,
+				texture = "eden_item_smoke.png",
+			})
+			meta:set_int("particle_id", id)
+		end
+	end
+end
+
+-- [function] Remove particlespawner
+local function remove(pos)
+	if PARTICLES then
+		local meta = minetest.get_meta(pos)
+		if meta then
+			minetest.delete_particlespawner(meta:get_int("particle_id"))
+		end
+	end
+end
+
+---
+--- Registrations
+---
+
 minetest.register_node("eden:torch", {
 	description = "Torch",
 	drawtype = "mesh",
@@ -52,7 +103,7 @@ minetest.register_node("eden:torch", {
 	walkable = false,
 	liquids_pointable = false,
 	light_source = 12,
-	groups = {choppy=2, dig_immediate=3, flammable=1, attached_node=1, torch=1},
+	groups = {choppy=2, dig_immediate=3, flammable=1, attached_node=1},
 	drop = "eden:torch",
 	selection_box = {
 		type = "wallmounted",
@@ -82,8 +133,14 @@ minetest.register_node("eden:torch", {
 		itemstack = minetest.item_place(fakestack, placer, pointed_thing, wdir)
 		itemstack:set_name("eden:torch")
 
+		-- Add particles
+		add(pointed_thing.above)
+
 		return itemstack
-	end
+	end,
+	on_destruct = function(pos)
+		remove(pos)
+	end,
 })
 
 minetest.register_node("eden:torch_wall", {
@@ -95,10 +152,23 @@ minetest.register_node("eden:torch_wall", {
 	sunlight_propagates = true,
 	walkable = false,
 	light_source = 12,
-	groups = {choppy=2, dig_immediate=3, flammable=1, not_in_creative_inventory=1, attached_node=1, torch=1},
+	groups = {choppy=2, dig_immediate=3, flammable=1, not_in_creative_inventory=1, attached_node=1},
 	drop = "eden:torch",
 	selection_box = {
 		type = "wallmounted",
 		wall_side = {-1/2, -1/2, -1/8, -1/8, 1/8, 1/8},
 	},
 })
+
+if PARTICLES then
+	minetest.register_lbm({
+		label = "Add particles to torches",
+		name = "eden:torch_particle",
+		nodenames = {"eden:torch", "eden:torch_wall"},
+		run_at_every_load = true,
+		action = function(pos, node)
+			-- Add particles
+			add(pos)
+		end,
+	})
+end
