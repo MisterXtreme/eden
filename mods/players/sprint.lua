@@ -95,7 +95,7 @@ minetest.register_globalstep(function(dtime)
 						minpos = {x = pos.x - 0.5, y = pos.y + 1.1, z = pos.z - 0.5},
 						maxpos = {x = pos.x + 0.5, y = pos.y + 1.1, z = pos.z + 0.5},
 						minvel = {x = 0, y = 3, z = 0},
-						minvel = {x = 0, y = 5, z = 0},
+						maxvel = {x = 0, y = 5, z = 0},
 						minacc = {x = 0, y = -10, z = 0},
 						maxacc = {x = 0, y = -13, z = 0},
 						minexptime = 0.5,
