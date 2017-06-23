@@ -15,7 +15,7 @@ trees.register("oak", {
   schematic = "oak_tree.mts",
   mapgen = {
     place_on = {"soil:dirt_with_grass"},
-    fill_ratio = 0.05,
+    fill_ratio = 0.01,
     biomes = {"eden:grassland"},
     y_min = 1,
     y_max = 200,
