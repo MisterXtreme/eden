@@ -351,8 +351,12 @@ function minetest.handle_node_drops(pos, drops, digger)
 			end
 		else
 			for i=1, count do
-				local obj = minetest.add_item(pos, name)
-				obj:get_luaentity().age = 0.5
+				if ItemStack(name):is_known() then
+					local obj = minetest.add_item(pos, name)
+					if obj then
+						obj:get_luaentity().age = 0.5
+					end
+				end
 			end
 		end
 	end
