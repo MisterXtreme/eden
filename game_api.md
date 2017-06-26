@@ -352,3 +352,29 @@ tools.register("Diamond", "diamond", {
 	}},
 })
 ```
+
+Flora API
+---------
+The flora API is meant to allow registration of plants and their characteristics.
+
+`flora.register(name, def)`
+
+* Registers a plant
+* `name`: Name of plant
+* `def`: See [#Plant definition]
+
+#### Plant definition
+```lua
+flora.register("cactus", {
+  node = {
+    description = "Cactus",
+    tiles = {"flora_cactus.png"},
+    ...
+  },
+  decoration = {
+    deco_type = "simple",
+    place_on = "soil:sand",
+    ...
+  },
+})
+```
