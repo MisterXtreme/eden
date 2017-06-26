@@ -20,18 +20,47 @@ local function pre(player, name, form, group)
     tabs = gui.get_tabs_by_group(group)
   end
 
-  local x, y = -0.9, 0.5
+  local vx, vy = -0.91, 0.5
+	local hx, hy = 0.5, -0.96
   -- Generate tabs
   for _, f in pairs(tabs) do
+		local x, y, r = vx, vy, ""
+		local style = f.style or "vertical"
     local icon = f.icon or "gui_null.png"
     local tooltip = f.tooltip or ""
-    local shifted_icon = "[combine:16x16:0,0=gui_tab_active.png:0,1="..icon
+		local tab = {
+			active = "gui_tab_active.png",
+			inactive = "gui_tab_inactive.png",
+		}
+		local shift = {
+			active = {x = 1, y = 0},
+			inactive = {x = 1, y = -1},
+		}
 
-    form = form .. "image_button["..x..","..y..";1,1;gui_tab_inactive.png^"..icon
-      ..";".."tab_"..f.name..";;true;false;"..minetest.formspec_escape(shifted_icon).."]"
-      .."tooltip[tab_"..f.name..";"..tooltip.."]"
+		if style == "horizontal" then
+			x, y = hx, hy
+			tab = {
+				active = "gui_tab_horizontal_active.png",
+				inactive = "gui_tab_horizontal_inactive.png",
+			}
+			shift = {
+				active = {x = 0, y = 2},
+				inactive = {x = 0, y = 1},
+			}
+		end
 
-    y = y + 0.82
+    local shifted_icon = "[combine:16x16:0,0="..tab.active..":"..shift.active.x..","..shift.active.y.."="..icon
+		icon = "[combine:16x16:0,0="..tab.inactive..":"..shift.inactive.x..","..shift.inactive.y.."="..icon
+
+    form = form .. "image_button["..x..","..y..";1,1;"..minetest.formspec_escape(icon)
+				..";".."tab_"..f.name..";;true;false;"..minetest.formspec_escape(shifted_icon).."]"
+      	.."tooltip[tab_"..f.name..";"..tooltip.."]"
+
+		if style == "horizontal" then
+			hx = x + 0.82
+		elseif style == "vertical" then
+    	vy = y + 0.82
+		end
   end
 
   return form

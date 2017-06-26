@@ -173,6 +173,11 @@ The GUI API easily generates formstrings for custom elements and allows you to r
 #### Tab definition
 ```lua
 {
+  style = "vertical" or "horizontal",
+  -- ^ "vertical" causes the tab to be displayed as part of a
+  -- vertical list (default), while horizontal causes the tab
+  -- to be displayed as part of a horizontal list at the top
+  -- of the formspec.
   icon = "tab_inventory.png",
   tooltip = "Inventory",
   default = true, -- Set tab to default
