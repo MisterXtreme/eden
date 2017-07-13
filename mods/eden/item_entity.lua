@@ -203,7 +203,7 @@ local item = {
 			for _, object in ipairs(minetest.get_objects_inside_radius(p, 0.8)) do
 				local obj = object:get_luaentity()
 				if obj and obj.name == "__builtin:item"
-				 		and self.id ~= obj.id then
+						 and self.id ~= obj.id then
 					if self:try_merge_with(own_stack, object, obj) then
 						return
 					end
@@ -311,9 +311,23 @@ local item = {
 							})
 							object:remove()
 						elseif math.floor(vector.distance(pos, ppos)) <= radius_magnet then
-							local vec = vector.subtract(ppos, pos)
-							vec = vector.add(pos, vector.divide(vec, 2))
-							object:moveto(vec)
+							local ok, blocker = minetest.line_of_sight(ppos, pos)
+							if not ok and blocker then
+								local node = minetest.get_node_or_nil(blocker)
+								if node and node.name then
+									local def = minetest.registered_nodes[node.name]
+									if (def.walkable ~= nil and def.walkable == false) or
+											(def.sunlight_propagates) or (def.drawtype == "nodebox") then
+										ok = true
+									end
+								end
+							end
+
+							if ok then
+								local vec = vector.subtract(ppos, pos)
+								vec = vector.add(pos, vector.divide(vec, 2))
+								object:moveto(vec)
+							end
 						end
 					end
 				end
