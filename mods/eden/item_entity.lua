@@ -388,7 +388,7 @@ function minetest.item_drop(itemstack, player, pos)
 		local cs = itemstack:get_count()
 		pos.y = pos.y + 1.3
 
-		if player:get_player_control().sneak then
+		if not player:get_player_control().sneak then
 			cs = 1
 		end
 		local item = itemstack:take_item(cs)
