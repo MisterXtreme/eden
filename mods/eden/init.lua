@@ -32,3 +32,5 @@ dofile(modpath.."/chatcommands.lua")
 dofile(modpath.."/wield.lua")
 -- Load torch
 dofile(modpath.."/torch.lua")
+-- Load falling nodes
+dofile(modpath.."/falling.lua")

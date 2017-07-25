@@ -158,6 +158,9 @@ minetest.register_node("eden:torch_wall", {
 		type = "wallmounted",
 		wall_side = {-1/2, -1/2, -1/8, -1/8, 1/8, 1/8},
 	},
+	on_destruct = function(pos)
+		remove(pos)
+	end,
 })
 
 if PARTICLES then
