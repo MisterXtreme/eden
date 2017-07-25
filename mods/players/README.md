@@ -11,7 +11,7 @@ Everything not listed in here:
 XtremeHacker (CC BY-SA 3.0)
 
 celeron55, Perttu Ahola <celeron55@gmail.com> (CC BY-SA 3.0):
-  character.b3d
+	character.b3d
 
 Jordach (CC BY-SA 3.0):
-  character.png
+	character.png

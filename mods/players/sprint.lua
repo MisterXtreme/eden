@@ -42,7 +42,7 @@ minetest.register_globalstep(function(dtime)
 		if ctrl[PRIMARY] and ctrl.up and not spr.is then
 			start_sprint(player, name, "primary")
 		elseif ((not ctrl[PRIMARY] and spr.is) or
-		 		(ctrl[PRIMARY] and not ctrl.up and spr.is))
+				 (ctrl[PRIMARY] and not ctrl.up and spr.is))
 						and spr.trigger == "primary" then
 			stop_sprint(player, name)
 		end
@@ -55,7 +55,7 @@ minetest.register_globalstep(function(dtime)
 
 			if ctrl[SECOND] ~= secondary[name].last then
 				if secondary[name].time > 0.3 and not spr.is and
-				 		secondary[name].count > 0 and secondary[name].count < 3 then
+						 secondary[name].count > 0 and secondary[name].count < 3 then
 					secondary[name] = {count = 0, time = 0, last = false}
 					return
 				end

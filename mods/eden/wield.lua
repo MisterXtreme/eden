@@ -71,7 +71,7 @@ minetest.register_entity("eden:wield_entity", {
 
 -- [register] Globalstep
 minetest.register_globalstep(function(dtime)
-  -- Add/update wielditem entity
+	-- Add/update wielditem entity
 	for _, player in pairs(minetest.get_connected_players()) do
 		local name  = player:get_player_name()
 		local wield = player_wielding[name] or {}

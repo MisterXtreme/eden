@@ -15,9 +15,9 @@ local models = players.registered_models
 function players.register_model(name, def)
 	models[name] = def
 
-  if def.default_model then
-    players.default_model = name
-  end
+	if def.default_model then
+		players.default_model = name
+	end
 end
 
 -- Player stats and animations
@@ -96,9 +96,9 @@ end
 
 -- [on joinplayer] Update appearance/physics
 minetest.register_on_joinplayer(function(player)
-  if not players.default_model then
-    return
-  end
+	if not players.default_model then
+		return
+	end
 
 	players.attached[player:get_player_name()] = false
 	players.set_model(player, players.default_model)

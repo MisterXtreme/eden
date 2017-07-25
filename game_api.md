@@ -54,35 +54,35 @@ The gamemode API allows registering new gamemodes to be used in-game.
 #### Gamemode definition
 ```lua
 {
-  tab_group = "creative", -- Group of tabs to be shown in inventory
-  aliases = {"c", "1"}, -- Aliases that refer to the gamemode
+	tab_group = "creative", -- Group of tabs to be shown in inventory
+	aliases = {"c", "1"}, -- Aliases that refer to the gamemode
 
-  -- Gamemode-specific hand definition
-  hand = {
-    range = 10 -- Custom range
-    on_use = function() ... end, -- Custom on_use
-    full_punch_interval = 1.0,
+	-- Gamemode-specific hand definition
+	hand = {
+		range = 10 -- Custom range
+		on_use = function() ... end, -- Custom on_use
+		full_punch_interval = 1.0,
 		max_drop_level = 0,
 		groupcaps = {
 			fleshy = {times={[2]=2.00, [3]=1.00}, uses=0, maxlevel=1},
 			crumbly = {times={[2]=3.00, [3]=0.70}, uses=0, maxlevel=1},
 			snappy = {times={[3]=0.40}, uses=0, maxlevel=1},
 			oddly_breakable_by_hand = {times={[1]=7.00,[2]=4.00,[3]=1.40},
-	         uses=0, maxlevel=3},
-	   },
-    damage_groups = {fleshy=1},
-  },
+					 uses=0, maxlevel=3},
+		 },
+		damage_groups = {fleshy=1},
+	},
 
-  stack_unlimited = true, -- Whether the player can place an infinite amount of blocks from a single itemstack
-  item_drops = "auto", -- Automatically pick up item if not in inventory (used by creative), else drop item
-  hud_flags = { hotbar = false }, -- Change HUD flags for gamemode
-  privileges = { interact = false }, -- Enable/disable privileges for gamemode
-  on_enable = function(player)
-    -- Called when the gamemode is enabled for a player
-  end,
-  on_disable = function(player)
-    -- Called when the player changes to another gamemode
-  end,
+	stack_unlimited = true, -- Whether the player can place an infinite amount of blocks from a single itemstack
+	item_drops = "auto", -- Automatically pick up item if not in inventory (used by creative), else drop item
+	hud_flags = { hotbar = false }, -- Change HUD flags for gamemode
+	privileges = { interact = false }, -- Enable/disable privileges for gamemode
+	on_enable = function(player)
+		-- Called when the gamemode is enabled for a player
+	end,
+	on_disable = function(player)
+		-- Called when the player changes to another gamemode
+	end,
 }
 ```
 
@@ -173,23 +173,23 @@ The GUI API easily generates formstrings for custom elements and allows you to r
 #### Tab definition
 ```lua
 {
-  style = "vertical" or "horizontal",
-  -- ^ "vertical" causes the tab to be displayed as part of a
-  -- vertical list (default), while horizontal causes the tab
-  -- to be displayed as part of a horizontal list at the top
-  -- of the formspec.
-  icon = "tab_inventory.png",
-  tooltip = "Inventory",
-  default = true, -- Set tab to default
-  groups = { survival = true, creative = false}, -- Tab groups allow grouping multiple tabs together
-  get = function(name) -- Get formspec string (must return a formstring)
-    return [[
-      label[0,0;Hello world!]
-    ]]
-  end,
-  handle = function(name, fields)
-    -- Handle submitted data
-  end,
+	style = "vertical" or "horizontal",
+	-- ^ "vertical" causes the tab to be displayed as part of a
+	-- vertical list (default), while horizontal causes the tab
+	-- to be displayed as part of a horizontal list at the top
+	-- of the formspec.
+	icon = "tab_inventory.png",
+	tooltip = "Inventory",
+	default = true, -- Set tab to default
+	groups = { survival = true, creative = false}, -- Tab groups allow grouping multiple tabs together
+	get = function(name) -- Get formspec string (must return a formstring)
+		return [[
+			label[0,0;Hello world!]
+		]]
+	end,
+	handle = function(name, fields)
+		-- Handle submitted data
+	end,
 }
 ```
 
@@ -237,13 +237,13 @@ The players API allows getting or setting specifics related to the player includ
 #### Model definition
 ```lua
 {
-  animation_speed = 30, -- Animation speed
-  textures = {"character.png"}, -- Textures file
-  animations = {
-    -- Standard animations
-    stand = { x=  0, y= 79, },
-    ...
-  }
+	animation_speed = 30, -- Animation speed
+	textures = {"character.png"}, -- Textures file
+	animations = {
+		-- Standard animations
+		stand = { x=  0, y= 79, },
+		...
+	}
 }
 ```
 
@@ -255,8 +255,8 @@ The soil API allows registering soils nodes (e.g grass/dirt).
 
 * `name`: Name of soil (without modname)
 * `def`: See [Node definition (`register_node`)]
-    * Unless overriden in definition, groups `crumbly` and `soil`,
-    * `is_ground_content`, and `drops` are automatically set.
+		* Unless overriden in definition, groups `crumbly` and `soil`,
+		* `is_ground_content`, and `drops` are automatically set.
 
 Trees API
 ---------
@@ -301,22 +301,22 @@ The trees API allows registering, checking, placing, and growing trees.
 #### Tree definition
 ```lua
 {
-  basename = "Oak", -- Name to be concatenated for other nodes
-  center = "trees_oak_log.png", -- Center (top/bottom) texture
-  sides = "trees_oak_log_sides.png", -- Side texture
-  plank = "trees_oak_plank.png", -- Plank texture
-  sapling = "trees_oak_sapling.png", -- Sapling texture
-  leaf = "trees_oak_leaf.png", -- Leaf texture
-  offset = { x = -3, y = -1, z = -3}, -- Placement offset (x and z typically half the width and depth of the tree, y typically -1)
-  schematic = "oak_tree.mts", -- Tree schematic file
-  -- Mapgen definitions (minus those mentioned above - i.e. schematic)
-  mapgen = {
-    place_on = {"soil:dirt_with_grass"},
-    fill_ratio = 0.05,
-    biomes = {"eden:grassland"},
-    y_min = 1,
-    y_max = 200,
-  },
+	basename = "Oak", -- Name to be concatenated for other nodes
+	center = "trees_oak_log.png", -- Center (top/bottom) texture
+	sides = "trees_oak_log_sides.png", -- Side texture
+	plank = "trees_oak_plank.png", -- Plank texture
+	sapling = "trees_oak_sapling.png", -- Sapling texture
+	leaf = "trees_oak_leaf.png", -- Leaf texture
+	offset = { x = -3, y = -1, z = -3}, -- Placement offset (x and z typically half the width and depth of the tree, y typically -1)
+	schematic = "oak_tree.mts", -- Tree schematic file
+	-- Mapgen definitions (minus those mentioned above - i.e. schematic)
+	mapgen = {
+		place_on = {"soil:dirt_with_grass"},
+		fill_ratio = 0.05,
+		biomes = {"eden:grassland"},
+		y_min = 1,
+		y_max = 200,
+	},
 }
 ```
 
@@ -334,7 +334,7 @@ The tools API easily registers entire sets of tools.
 #### Tool Definition
 ```lua
 tools.register("Diamond", "diamond", {
-  material = "ores:diamond",
+	material = "ores:diamond",
 	pick = {"tools_diamond_pick.png", {
 		-- Capabilities
 	}},
@@ -366,15 +366,15 @@ The flora API is meant to allow registration of plants and their characteristics
 #### Plant definition
 ```lua
 flora.register("cactus", {
-  node = {
-    description = "Cactus",
-    tiles = {"flora_cactus.png"},
-    ...
-  },
-  decoration = {
-    deco_type = "simple",
-    place_on = "soil:sand",
-    ...
-  },
+	node = {
+		description = "Cactus",
+		tiles = {"flora_cactus.png"},
+		...
+	},
+	decoration = {
+		deco_type = "simple",
+		place_on = "soil:sand",
+		...
+	},
 })
 ```

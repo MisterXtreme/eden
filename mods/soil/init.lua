@@ -8,13 +8,13 @@ soil = {}
 
 -- [function] Register soil
 function soil.register(name, def)
-  if not def.groups then def.groups = {} end
-  def.groups.crumbly = def.groups.crumbly or 3
-  def.groups.soil = def.groups.soil or 1
-  def.is_ground_content = true
-  def.drop = def.drop or "soil:"..name
+	if not def.groups then def.groups = {} end
+	def.groups.crumbly = def.groups.crumbly or 3
+	def.groups.soil = def.groups.soil or 1
+	def.is_ground_content = true
+	def.drop = def.drop or "soil:"..name
 
-  minetest.register_node("soil:"..name, def)
+	minetest.register_node("soil:"..name, def)
 end
 
 ---

@@ -11,23 +11,23 @@ local forms = {}
 
 -- [local function] Preprocess
 local function pre(player, name, form, group)
-  form = "size[9.5,9]"..form..gui.colors..gui.bg.."background[0,0;9.5,9;gui_formspec_bg.png]"
+	form = "size[9.5,9]"..form..gui.colors..gui.bg.."background[0,0;9.5,9;gui_formspec_bg.png]"
 
-  local tab  = gui.get_tab(name)
-  local tabs = forms
-  local group = group or gui.get_inv_group(player)
-  if group then
-    tabs = gui.get_tabs_by_group(group)
-  end
+	local tab  = gui.get_tab(name)
+	local tabs = forms
+	local group = group or gui.get_inv_group(player)
+	if group then
+		tabs = gui.get_tabs_by_group(group)
+	end
 
-  local vx, vy = -0.91, 0.5
+	local vx, vy = -0.91, 0.5
 	local hx, hy = 0.5, -0.96
-  -- Generate tabs
-  for _, f in pairs(tabs) do
+	-- Generate tabs
+	for _, f in pairs(tabs) do
 		local x, y, r = vx, vy, ""
 		local style = f.style or "vertical"
-    local icon = f.icon or "gui_null.png"
-    local tooltip = f.tooltip or ""
+		local icon = f.icon or "gui_null.png"
+		local tooltip = f.tooltip or ""
 		local tab = {
 			active = "gui_tab_active.png",
 			inactive = "gui_tab_inactive.png",
@@ -49,21 +49,21 @@ local function pre(player, name, form, group)
 			}
 		end
 
-    local shifted_icon = "[combine:16x16:0,0="..tab.active..":"..shift.active.x..","..shift.active.y.."="..icon
+		local shifted_icon = "[combine:16x16:0,0="..tab.active..":"..shift.active.x..","..shift.active.y.."="..icon
 		icon = "[combine:16x16:0,0="..tab.inactive..":"..shift.inactive.x..","..shift.inactive.y.."="..icon
 
-    form = form .. "image_button["..x..","..y..";1,1;"..minetest.formspec_escape(icon)
+		form = form .. "image_button["..x..","..y..";1,1;"..minetest.formspec_escape(icon)
 				..";".."tab_"..f.name..";;true;false;"..minetest.formspec_escape(shifted_icon).."]"
-      	.."tooltip[tab_"..f.name..";"..tooltip.."]"
+				.."tooltip[tab_"..f.name..";"..tooltip.."]"
 
 		if style == "horizontal" then
 			hx = x + 0.82
 		elseif style == "vertical" then
-    	vy = y + 0.82
+			vy = y + 0.82
 		end
-  end
+	end
 
-  return form
+	return form
 end
 
 ---
@@ -72,34 +72,34 @@ end
 
 -- [register] On join
 minetest.register_on_joinplayer(function(player)
-  -- Set inventory size
-  player:get_inventory():set_size("main", 9 * 3)
+	-- Set inventory size
+	player:get_inventory():set_size("main", 9 * 3)
 	-- Initialize creative inventory
 	gui.init_creative_inv(player)
 end)
 
 -- [register] On receive fields
 minetest.register_on_player_receive_fields(function(player, formname, fields)
-  if formname == "" then
-    formname = player:get_attribute("inv_form") or "gui:inventory"
-  end
+	if formname == "" then
+		formname = player:get_attribute("inv_form") or "gui:inventory"
+	end
 
-  formname = formname:split(":")
+	formname = formname:split(":")
 
-  if formname[1] == "gui" and gui.get_tab(formname[2]) then
-    -- Check for tab clicks
-    for _, f in pairs(forms) do
-      if fields["tab_"..f.name] then
-        gui.set_current_tab(player, f.name)
-        return
-      end
-    end
+	if formname[1] == "gui" and gui.get_tab(formname[2]) then
+		-- Check for tab clicks
+		for _, f in pairs(forms) do
+			if fields["tab_"..f.name] then
+				gui.set_current_tab(player, f.name)
+				return
+			end
+		end
 
-    local handle = gui.get_tab(formname[2]).handle
-    if handle then
-      handle(player:get_player_name(), fields)
-    end
-  end
+		local handle = gui.get_tab(formname[2]).handle
+		if handle then
+			handle(player:get_player_name(), fields)
+		end
+	end
 end)
 
 ---
@@ -108,84 +108,84 @@ end)
 
 -- [function] Register tab
 function gui.register_tab(name, def)
-  def.name = name
-  forms[#forms + 1] = def
+	def.name = name
+	forms[#forms + 1] = def
 end
 
 -- [function] Get tab
 function gui.get_tab(name)
-  for _, f in pairs(forms) do
-    if f.name == name then
-      return f
-    end
-  end
+	for _, f in pairs(forms) do
+		if f.name == name then
+			return f
+		end
+	end
 end
 
 -- [function] Get tabs by group
 function gui.get_tabs_by_group(group)
-  local tabs = {}
-  for _, f in pairs(forms) do
-    if f.groups[group] then
-      tabs[#tabs + 1] = f
-    end
-  end
-  return tabs
+	local tabs = {}
+	for _, f in pairs(forms) do
+		if f.groups[group] then
+			tabs[#tabs + 1] = f
+		end
+	end
+	return tabs
 end
 
 -- [function] Get group default tab
 function gui.get_group_default(group)
-  local tabs = gui.get_tabs_by_group(group)
-  if tabs then
-    for _, f in pairs(tabs) do
-      if f.default then
-        return f
-      end
-    end
-  end
+	local tabs = gui.get_tabs_by_group(group)
+	if tabs then
+		for _, f in pairs(tabs) do
+			if f.default then
+				return f
+			end
+		end
+	end
 end
 
 -- [function] Set current tab
 function gui.set_current_tab(player, formname)
-  if type(player) == "string" then
-    player = minetest.get_player_by_name(player)
-  end
-  local name = player:get_player_name()
+	if type(player) == "string" then
+		player = minetest.get_player_by_name(player)
+	end
+	local name = player:get_player_name()
 
-  if gui.get_tab(formname) then
-    local f = gui.get_tab(formname)
+	if gui.get_tab(formname) then
+		local f = gui.get_tab(formname)
 
-    player:set_inventory_formspec(pre(player, f.name, f.get(name)))
-    player:set_attribute("inv_form", "gui:"..f.name)
-  end
+		player:set_inventory_formspec(pre(player, f.name, f.get(name)))
+		player:set_attribute("inv_form", "gui:"..f.name)
+	end
 end
 
 -- [function] Get player inventory group
 function gui.get_inv_group(player)
-  if type(player) == "string" then
-    player = minetest.get_player_by_name(player)
-  end
+	if type(player) == "string" then
+		player = minetest.get_player_by_name(player)
+	end
 
-  local attr = player:get_attribute("inv_tab_group")
-  if attr and attr ~= "" then
-    return attr
-  end
+	local attr = player:get_attribute("inv_tab_group")
+	if attr and attr ~= "" then
+		return attr
+	end
 end
 
 -- [function] Set tab group
 function gui.set_tab_group(player, group)
-  if type(player) == "string" then
-    player = minetest.get_player_by_name(player)
-  end
-  local name = player:get_player_name()
+	if type(player) == "string" then
+		player = minetest.get_player_by_name(player)
+	end
+	local name = player:get_player_name()
 
-  -- Set attribute
-  player:set_attribute("inv_tab_group", group)
+	-- Set attribute
+	player:set_attribute("inv_tab_group", group)
 
-  local default = gui.get_group_default(group)
-  if default then
-    player:set_inventory_formspec(pre(player, default.name, default.get(name), group))
-    player:set_attribute("inv_form", "gui:"..default.name)
-  end
+	local default = gui.get_group_default(group)
+	if default then
+		player:set_inventory_formspec(pre(player, default.name, default.get(name), group))
+		player:set_attribute("inv_form", "gui:"..default.name)
+	end
 end
 
 -- [function] Get itemslot background
@@ -208,24 +208,24 @@ end
 
 -- [function] Get hotbar itemslot background
 function gui.get_hotbar_itemslot_bg(x, y, w, h)
-   local out = ""
-   for i = 0, w - 1, 1 do
-      for j = 0, h - 1, 1 do
-	       out = out .."image["..x+i..","..y+j..";1,1;gui_itemslot.png^gui_itemslot_dark.png]"
-      end
-   end
-   return out
+	 local out = ""
+	 for i = 0, w - 1, 1 do
+			for j = 0, h - 1, 1 do
+				 out = out .."image["..x+i..","..y+j..";1,1;gui_itemslot.png^gui_itemslot_dark.png]"
+			end
+	 end
+	 return out
 end
 
 -- [function] Make inventory
 function gui.make_inv(x, y, w, h, location, name, hotbar, start, strict_count)
-  start = start or ""
+	start = start or ""
 
-  if hotbar ~= false then
-    hotbar = gui.get_hotbar_itemslot_bg(x, y, w, 1)
-  else
-    hotbar = ""
-  end
+	if hotbar ~= false then
+		hotbar = gui.get_hotbar_itemslot_bg(x, y, w, 1)
+	else
+		hotbar = ""
+	end
 
 	local count
 	if strict_count then
@@ -265,29 +265,29 @@ function gui.make_inv(x, y, w, h, location, name, hotbar, start, strict_count)
 		end
 	end
 
-  return "list["..location..";"..name..";"..x..","..y..";"..w..","..h..";"..start.."]"
-    ..hotbar..gui.get_itemslot_bg(x, y, w, h, (count or nil))
+	return "list["..location..";"..name..";"..x..","..y..";"..w..","..h..";"..start.."]"
+		..hotbar..gui.get_itemslot_bg(x, y, w, h, (count or nil))
 end
 
 -- [function] Make button
 function gui.make_button(x, y, w, h, name, label, noclip, exit)
-  local nc = tostring(noclip) or "false"
+	local nc = tostring(noclip) or "false"
 
-  local type = "image_button"
-  if exit == true then
-    type = "image_button_exit"
-  end
+	local type = "image_button"
+	if exit == true then
+		type = "image_button_exit"
+	end
 
-  if w == 1 then
-    return type.."["..x..","..y..";"..w..","..h..";gui_button_1w_inactive.png;"
-      ..name..";"..label..";"..nc..";false;gui_button_1w_active.png]"
-  elseif w == 2 then
-    return type.."["..x..","..y..";"..w..","..h..";gui_button_2w_inactive.png;"
-      ..name..";"..label..";"..nc..";false;gui_button_2w_active.png]"
-  else
-    return type.."["..x..","..y..";"..w..","..h..";gui_button_3w_inactive.png;"
-      ..name..";"..label..";"..nc..";false;gui_button_3w_active.png]"
-  end
+	if w == 1 then
+		return type.."["..x..","..y..";"..w..","..h..";gui_button_1w_inactive.png;"
+			..name..";"..label..";"..nc..";false;gui_button_1w_active.png]"
+	elseif w == 2 then
+		return type.."["..x..","..y..";"..w..","..h..";gui_button_2w_inactive.png;"
+			..name..";"..label..";"..nc..";false;gui_button_2w_active.png]"
+	else
+		return type.."["..x..","..y..";"..w..","..h..";gui_button_3w_inactive.png;"
+			..name..";"..label..";"..nc..";false;gui_button_3w_active.png]"
+	end
 end
 
 ---
