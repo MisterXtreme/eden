@@ -373,6 +373,7 @@ The flora API is meant to allow registration of plants and their characteristics
 #### Plant definition
 ```lua
 flora.register("cactus", {
+	real_physics = true, -- Controls whether the node requires an adjacent solid node
 	node = {
 		description = "Cactus",
 		tiles = {"flora_cactus.png"},
