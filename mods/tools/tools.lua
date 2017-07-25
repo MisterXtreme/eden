@@ -65,9 +65,9 @@ tools.register("Diamond", "diamond", {
 	}},
 })
 
-tools.register("Wooden", "wood", {
-	material = "group:plank",
-	pick = {"tools_wood_pick.png", {
+tools.register("Rock", "rock", {
+	material = "eden:cobble",
+	pick = {"tools_rock_pick.png", {
 		full_punch_interval = 1.2,
 		max_drop_level=0,
 		groupcaps={
@@ -75,11 +75,28 @@ tools.register("Wooden", "wood", {
 		},
 		damage_groups = {fleshy=2},
 	}},
-	axe = {"tools_wood_axe.png", {
+	hatchet = {"tools_rock_hatchet.png", {
 		full_punch_interval = 1.0,
 		max_drop_level=0,
 		groupcaps={
 			choppy = {times={[2]=3.00, [3]=1.60}, uses=10, maxlevel=1},
+		},
+		damage_groups = {fleshy=2},
+	}},
+	spade = {"tools_rock_spade.png", {
+		full_punch_interval = 1.2,
+		max_drop_level=0,
+		groupcaps={
+			crumbly = {times={[1]=3.00, [2]=1.60, [3]=0.60}, uses=10, maxlevel=1},
+		},
+		damage_groups = {fleshy=2},
+	}},
+	hoe = {"tools_rock_hoe.png"},
+	knife = {"tools_rock_knife.png", {
+		full_punch_interval = 1,
+		max_drop_level=0,
+		groupcaps={
+			snappy={times={[2]=1.6, [3]=0.40}, uses=10, maxlevel=1},
 		},
 		damage_groups = {fleshy=2},
 	}},
