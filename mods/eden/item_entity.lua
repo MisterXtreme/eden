@@ -336,6 +336,30 @@ local item = {
 	end,
 }
 
+---
+--- Function Overrides
+---
+
+local add_item = minetest.add_item
+function minetest.add_item(pos, item, random_velocity)
+	local obj = add_item(pos, item)
+
+	if obj and random_velocity ~= false then
+		local x = math.random(1, 5)
+		if math.random(1, 2) == 1 then
+			x = -x
+		end
+		local z = math.random(1, 5)
+		if math.random(1, 2) == 1 then
+			z = -z
+		end
+
+		obj:set_velocity({x = 1 / x, y = obj:get_velocity().y, z = 1 / z})
+	end
+
+	return obj
+end
+
 function minetest.handle_node_drops(pos, drops, digger)
 	if not digger or not digger:is_player() then
 		return
@@ -369,6 +393,7 @@ function minetest.handle_node_drops(pos, drops, digger)
 					local obj = minetest.add_item(pos, name)
 					if obj then
 						obj:get_luaentity().age = 0.5
+						obj:set_yaw(digger:get_look_horizontal())
 					end
 				end
 			end
@@ -392,7 +417,7 @@ function minetest.item_drop(itemstack, player, pos)
 			cs = 1
 		end
 		local item = itemstack:take_item(cs)
-		local obj  = minetest.add_item(pos, item)
+		local obj  = minetest.add_item(pos, item, false)
 		if obj then
 			v.x = (v.x*5)+vel.x
 			v.y = ((v.y*5)+2)+vel.y
@@ -404,7 +429,7 @@ function minetest.item_drop(itemstack, player, pos)
 			return itemstack
 		end
 	else -- else, Machine - use default item drop
-		if minetest.add_item(pos, itemstack) then
+		if minetest.add_item(pos, itemstack, false) then
 			return itemstack
 		end
 	end

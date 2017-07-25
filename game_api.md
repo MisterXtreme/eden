@@ -12,11 +12,18 @@ Please note:
 
 Eden API
 --------
-The Eden mod API allows you to get information about the current subgame version.
+The Eden mod API allows you to get information about the current subgame version and also ducuments overriden core Minetest functions with important changes.
 
 `eden.get_version()`
 
 * Returns a table containing fields `version`, `type` (release type), `core` (corresponding Minetest core version), `core_type` (correspending release type of Minetest core).
+
+`minetest.add_item(pos, item, random_velocity)`
+
+* Returns object if the item entity was successfully added to the world
+* `pos`: Positional vector
+* `item`: ItemString or ItemStack
+* `random_velocity`: Causes a random offset to be added to the initial position via velocity (default: `true`)
 
 Gamemode API
 ------------

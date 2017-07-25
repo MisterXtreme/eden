@@ -152,12 +152,7 @@ local function drop_attached_node(p)
 	local n = minetest.get_node(p)
 	minetest.remove_node(p)
 	for _, item in pairs(minetest.get_node_drops(n, "")) do
-		local pos = {
-			x = p.x + math.random() / 2 - 0.25,
-			y = p.y + math.random() / 2 - 0.25,
-			z = p.z + math.random() / 2 - 0.25,
-		}
-		minetest.add_item(pos, item)
+		minetest.add_item(p, item)
 	end
 
 	local def = minetest.registered_nodes[n.name]
