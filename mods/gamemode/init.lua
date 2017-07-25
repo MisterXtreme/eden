@@ -32,13 +32,15 @@ end)
 
 -- [register] On dig node
 minetest.register_on_dignode(function(pos, node, player)
-	local mode = gamemode.def(gamemode.get(player))
-	local name = player:get_player_name()
-	if not gamemode.can_interact(player) then
-		minetest.set_node(pos, {name = node.name})
-		minetest.chat_send_player(name, minetest.colorize("red", "WARNING")..
-				" You cannot dig nodes in "..mode.name.." mode")
-		return true
+	if player then
+		local mode = gamemode.def(gamemode.get(player))
+		local name = player:get_player_name()
+		if not gamemode.can_interact(player) then
+			minetest.set_node(pos, {name = node.name})
+			minetest.chat_send_player(name, minetest.colorize("red", "WARNING")..
+					" You cannot dig nodes in "..mode.name.." mode")
+			return true
+		end
 	end
 end)
 
