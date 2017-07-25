@@ -30,3 +30,17 @@ minetest.register_biome({
 	heat_point = 50,
 	humidity_point = 50,
 })
+
+minetest.register_biome({
+	name = "eden:jungle",
+	node_top = "soil:dirt_with_grass",
+	depth_top = 1,
+	depth_filler = "default:dirt",
+	depth_filler = 3,
+	node_riverbed = "soil:sand",
+	depth_riverbed = 2,
+	y_min = 1,
+	y_max = 31000,
+	heat_point = 86,
+	humidity_point = 65,
+})
