@@ -1,8 +1,8 @@
 -- tools/tools.lua
 
-tools.register("Steel", "steel", {
+tools.register("iron", "iron", {
 	material = "ores:iron",
-	pick = {"tools_steel_pick.png", {
+	pick = {"tools_iron_pick.png", {
 		full_punch_interval = 1.0,
 		max_drop_level=1,
 		groupcaps={
@@ -10,7 +10,7 @@ tools.register("Steel", "steel", {
 		},
 		damage_groups = {fleshy=4},
 	}},
-	axe = {"tools_steel_axe.png", {
+	axe = {"tools_iron_axe.png", {
 		full_punch_interval = 1.0,
 		max_drop_level=1,
 		groupcaps={
@@ -18,7 +18,7 @@ tools.register("Steel", "steel", {
 		},
 		damage_groups = {fleshy=4},
 	}},
-	shovel = {"tools_steel_shovel.png", {
+	shovel = {"tools_iron_shovel.png", {
 		full_punch_interval = 1.1,
 		max_drop_level=1,
 		groupcaps={
@@ -26,8 +26,8 @@ tools.register("Steel", "steel", {
 		},
 		damage_groups = {fleshy=3},
 	}},
-	hoe = {"tools_steel_hoe.png"},
-	sword = {"tools_steel_sword.png", {
+	hoe = {"tools_iron_hoe.png"},
+	sword = {"tools_iron_sword.png", {
 		full_punch_interval = 0.8,
 		max_drop_level=1,
 		groupcaps={

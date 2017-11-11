@@ -30,9 +30,7 @@ soil.register("dirt", {
 -- [soil] Dirt with grass
 soil.register("dirt_with_grass", {
 	description = "Dirt with grass",
-	tiles ={"soil_grass.png", "soil_dirt.png",
-		{name = "soil_dirt.png^soil_grass_side.png",
-		tileable_vertical = false}},
+	tiles ={"soil_grass.png"},
 	groups = {crumbly=3, soil=1},
 	drop = "soil:dirt",
 })
